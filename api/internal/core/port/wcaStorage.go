@@ -8,7 +8,7 @@ import (
 
 type WCAStorage interface {
 	// ImportFile imports a sql file to the storage
-	ImportFile(file *domain.File) error
+	ImportFile(file domain.File) error
 
 	// Update updates app and datalake tables from the sql dump
 	Update() error

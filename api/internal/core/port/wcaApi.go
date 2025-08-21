@@ -11,5 +11,5 @@ type WCAAPIService interface {
 	LatestData(ctx context.Context) (*domain.WCALatestData, error)
 
 	// DownloadLatestData downloads the latest available data into a file
-	DownloadLatestData(ctx context.Context, data *domain.WCALatestData) (*domain.File, error)
+	DownloadLatestData(ctx context.Context, data *domain.WCALatestData) (domain.File, error)
 }
