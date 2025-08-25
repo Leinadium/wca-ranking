@@ -35,13 +35,12 @@ const (
 
 // PersonRanking is an entry on the rankings of the person
 type PersonRanking struct {
-	WCAID            WCAID
 	Mode             RankingMode
 	Event            string
 	Ranking          int
 	Best             null.Int
-	CompetitionId    string      // TODO: check if necessary
-	CompetitionName  string      // TODO: check if necessary
+	CompetitionId    null.String // TODO: check if necessary
+	CompetitionName  null.String // TODO: check if necessary
 	CompetitionState null.String // TODO: check if necessary
 	Times            [5]null.Int
 }

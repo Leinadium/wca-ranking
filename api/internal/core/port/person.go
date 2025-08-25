@@ -8,13 +8,16 @@ import (
 
 type PersonRepository interface {
 	// Person gets the basic information about a person in the database
-	Person(id domain.WCAID) (*domain.Person, error)
+	Person(ctx context.Context, id domain.WCAID) (*domain.Person, error)
 
 	// Results gets the current best results and its current standings of the person
-	Results(id domain.WCAID) ([]*domain.PersonResult, error)
+	Results(ctx context.Context, id domain.WCAID) ([]*domain.PersonResult, error)
 
 	// Rankings gets the details of rankings for all events using the provided mode for a person
-	Rankings(id domain.WCAID, mode domain.RankingMode) (*domain.PersonRanking, error)
+	Rankings(ctx context.Context, id domain.WCAID, mode domain.RankingMode) ([]*domain.PersonRanking, error)
+
+	// Search gets person informations that matches the keyword
+	Search(ctx context.Context, keyword string)
 }
 
 type PersonService interface {

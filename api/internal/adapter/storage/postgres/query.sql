@@ -1,4 +1,3 @@
--------------------------------
 -- name: GetPersonSingle :many
 SELECT
     dlk.wca_id      AS wca_id,
@@ -28,9 +27,9 @@ FROM
         LEFT JOIN datalake.competitions comp2 on (dmp.competitionId = comp2.competition_id)
 WHERE
     dlk.single = dmp.best
-    AND dlk.wca_id = sqlc.arg(wcaId)
+    AND dlk.wca_id = sqlc.arg(wcaID)
+;
 
--------------------------------
 -- name: GetPersonAverage :many
 SELECT
     dlk.wca_id      AS wca_id,
@@ -60,9 +59,9 @@ FROM
         LEFT JOIN datalake.competitions comp2 on (dmp.competitionId = comp2.competition_id)
 WHERE
     dlk.average = dmp.average
-    AND dlk.wca_id = sqlc.arg(wcaId)
+    AND dlk.wca_id = sqlc.arg(wcaID)
+;
 
--------------------------------
 -- name: GetPersonInfo :one
 SELECT
     ct.wca_name AS name,
@@ -78,12 +77,29 @@ FROM
         LEFT JOIN (
             SELECT personId, COUNT(DISTINCT competitionId) AS total
             FROM dump.Results
-            WHERE personId = @wcaId
+            WHERE personId = sqlc.arg(wcaID)
         ) as cb2 ON cb2.personId = ct.wca_id
 WHERE
-    ct.wca_id = @wcaId
+    ct.wca_id = sqlc.arg(wcaID)
+;
 
--------------------------------
+-- name: GetPersonResults :many
+SELECT
+    rs.event_id                 AS event,
+    COALESCE(rs.single, 0)      AS single,
+    rs.ranking                  AS ranking_single,
+    COALESCE(ra.average,0)      AS average,
+    ra.ranking                  AS ranking_average
+FROM
+    datalake.ranking_single rs
+        JOIN datalake.ranking_average ra
+            ON rs.wca_id = ra.wca_id
+            AND rs.state_id = ra.state_id
+            AND rs.event_id = ra.event_id
+WHERE
+    rs.wca_id = sqlc.arg(wcaID)
+;
+
 -- name: GetRankingSingle :many
 SELECT
 	rs.wca_id 			AS wca_id,
@@ -111,6 +127,7 @@ FROM
 		LEFT JOIN datalake.competitions cpn on dmp.competitionId = cpn.competition_id 
 WHERE
 	rs.single = dmp.best
-	AND rs.state_id = sqlc.arg(stateId)
-	AND rs.event_id = sqlc.arg(eventId)
+	AND rs.state_id = sqlc.arg(stateID)
+	AND rs.event_id = sqlc.arg(eventID)
 ORDER BY rs.ranking ASC
+;
