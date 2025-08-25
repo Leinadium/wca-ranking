@@ -100,6 +100,19 @@ WHERE
     rs.wca_id = sqlc.arg(wcaID)
 ;
 
+-- name: Search :many
+SELECT
+	c.wca_id		AS wca_id,
+	c.wca_name		AS wca_name,
+	a.state_id		AS state_id
+FROM
+	datalake.competitors c
+        LEFT JOIN datalake.all_persons_with_states a on c.wca_id = a.wca_id
+WHERE
+	c.wca_id LIKE sqlc.arg(query)
+	OR c.wca_name LIKE sqlc.arg(query)
+;
+
 -- name: GetRankingSingle :many
 SELECT
 	rs.wca_id 			AS wca_id,

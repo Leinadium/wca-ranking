@@ -17,7 +17,7 @@ type PersonRepository interface {
 	Rankings(ctx context.Context, id domain.WCAID, mode domain.RankingMode) ([]*domain.PersonRanking, error)
 
 	// Search gets person informations that matches the keyword
-	Search(ctx context.Context, keyword string)
+	Search(ctx context.Context, keyword string) ([]*domain.SearchResult, error)
 }
 
 type PersonService interface {

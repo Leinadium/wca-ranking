@@ -388,3 +388,49 @@ func (q *Queries) GetRankingSingle(ctx context.Context, arg GetRankingSinglePara
 	}
 	return items, nil
 }
+
+const search = `-- name: Search :many
+SELECT
+	c.wca_id		AS wca_id,
+	c.wca_name		AS wca_name,
+	a.state_id		AS state_id
+FROM
+	datalake.competitors c
+        LEFT JOIN datalake.all_persons_with_states a on c.wca_id = a.wca_id
+WHERE
+	c.wca_id LIKE ?
+	OR c.wca_name LIKE ?
+`
+
+type SearchParams struct {
+	Query string
+}
+
+type SearchRow struct {
+	WcaID   string
+	WcaName string
+	StateID sql.NullString
+}
+
+func (q *Queries) Search(ctx context.Context, arg SearchParams) ([]SearchRow, error) {
+	rows, err := q.db.QueryContext(ctx, search, arg.Query, arg.Query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []SearchRow
+	for rows.Next() {
+		var i SearchRow
+		if err := rows.Scan(&i.WcaID, &i.WcaName, &i.StateID); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
