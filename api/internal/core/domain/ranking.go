@@ -60,8 +60,8 @@ type RankingEntry struct {
 	Best             null.Int
 	Ranking          int
 	Registered       bool
-	CompetitionID    string
-	CompetitionName  string
-	CompetitionState string
+	CompetitionID    null.String
+	CompetitionName  null.String
+	CompetitionState null.String
 	Times            [5]null.Int
 }

@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"errors"
 
 	"github.com/guregu/null"
 	"leinadium.dev/wca-ranking/internal/adapter/storage/postgres/schema"
@@ -47,31 +48,58 @@ func (p *PersonRepository) Results(ctx context.Context, id domain.WCAID) ([]*dom
 }
 
 func (p *PersonRepository) Rankings(ctx context.Context, id domain.WCAID, mode domain.RankingMode) ([]*domain.PersonRanking, error) {
-	if mode == domain.RankingAverage {
-		rows, err := p.query.GetPersonAverage(ctx, string(id))
-		if err != nil {
-			return nil, err
-		}
-		return utils.Map(rows, func(row schema.GetPersonAverageRow) *domain.PersonRanking {
-			return &domain.PersonRanking{
-				Mode:             mode,
-				Event:            row.EventID,
-				Ranking:          int(row.Ranking),
-				Best:             SQLNullInt32(row.Best),
-				CompetitionId:    SQLNullString(row.CompetitionID),
-				CompetitionName:  SQLNullString(row.CompetitionID),
-				CompetitionState: SQLNullString(row.CompetitionID),
-				Times: [5]null.Int{
-					SQLNullInt32(row.Time1),
-					SQLNullInt32(row.Time2),
-					SQLNullInt32(row.Time3),
-					SQLNullInt32(row.Time4),
-					SQLNullInt32(row.Time5),
-				},
+	switch mode {
+	case domain.RankingAverage:
+		{
+			rows, err := p.query.GetPersonAverage(ctx, string(id))
+			if err != nil {
+				return nil, err
 			}
-		}), nil
-
+			return utils.Map(rows, func(row schema.GetPersonAverageRow) *domain.PersonRanking {
+				return &domain.PersonRanking{
+					Mode:             mode,
+					Event:            row.EventID,
+					Ranking:          int(row.Ranking),
+					Best:             SQLNullInt32(row.Best),
+					CompetitionId:    SQLNullString(row.CompetitionID),
+					CompetitionName:  SQLNullString(row.CompetitionID),
+					CompetitionState: SQLNullString(row.CompetitionID),
+					Times: [5]null.Int{
+						SQLNullInt32(row.Time1),
+						SQLNullInt32(row.Time2),
+						SQLNullInt32(row.Time3),
+						SQLNullInt32(row.Time4),
+						SQLNullInt32(row.Time5),
+					},
+				}
+			}), nil
+		}
+	case domain.RankingSingle:
+		{
+			rows, err := p.query.GetPersonSingle(ctx, string(id))
+			if err != nil {
+				return nil, err
+			}
+			return utils.Map(rows, func(row schema.GetPersonSingleRow) *domain.PersonRanking {
+				return &domain.PersonRanking{
+					Mode:             mode,
+					Event:            row.EventID,
+					Ranking:          int(row.Ranking),
+					Best:             SQLNullInt32(row.Best),
+					CompetitionId:    SQLNullString(row.CompetitionID),
+					CompetitionName:  SQLNullString(row.CompetitionID),
+					CompetitionState: SQLNullString(row.CompetitionID),
+					Times: [5]null.Int{
+						SQLNullInt32(row.Time1),
+						SQLNullInt32(row.Time2),
+						SQLNullInt32(row.Time3),
+						SQLNullInt32(row.Time4),
+						SQLNullInt32(row.Time5),
+					},
+				}
+			}), nil
+		}
+	default:
+		return nil, errors.New("invalid ranking mode")
 	}
-
-	return nil, nil
 }

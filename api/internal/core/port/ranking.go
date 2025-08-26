@@ -8,10 +8,10 @@ import (
 
 type RankingRepository interface {
 	// Ranking gets the ranking for the event and state provided
-	Ranking(ctx context.Context, event domain.EventID, state domain.StateID) (*domain.RankingEntry, error)
+	Ranking(ctx context.Context, event domain.EventID, state domain.StateID, mode domain.RankingMode) ([]*domain.RankingEntry, error)
 }
 
 type RankingService interface {
 	// Ranking gets the ranking for the event and state provided
-	Ranking(ctx context.Context, event domain.EventID, state domain.StateID) (*domain.RankingEntry, error)
+	Ranking(ctx context.Context, event domain.EventID, state domain.StateID, mode domain.RankingMode) ([]*domain.RankingEntry, error)
 }

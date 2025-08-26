@@ -133,14 +133,48 @@ SELECT
     STR_TO_DATE(CONCAT(comp.year, ',', comp.endMonth, ',', comp.endDay), '%Y,%m,%d') AS ts
 FROM
 	datalake.ranking_single rs
-		LEFT JOIN datalake.competitors cpr on rs.wca_id = cpr.wca_id
+		JOIN datalake.competitors cpr on rs.wca_id = cpr.wca_id
 		LEFT JOIN app.registered_users ru on rs.wca_id = ru.wca_id
 		LEFT JOIN dump.Results dmp on (rs.wca_id = dmp.personId and rs.event_id = dmp.eventId)
 		LEFT JOIN dump.Competitions comp on dmp.competitionId = comp.id
 		LEFT JOIN datalake.competitions cpn on dmp.competitionId = cpn.competition_id 
 WHERE
 	rs.single = dmp.best
+    AND cpr.wca_name IS NOT NULL
 	AND rs.state_id = sqlc.arg(stateID)
 	AND rs.event_id = sqlc.arg(eventID)
 ORDER BY rs.ranking ASC
+;
+
+-- name: GetRankingAverage :many
+SELECT
+	ra.wca_id 			AS wca_id,
+	cpr.wca_name 		AS name,
+	ra.state_id 		AS state_id,
+	CASE WHEN ru.wca_id is not null THEN true ELSE false END AS registered,
+	ra.event_id 		AS event_id,
+	ra.ranking 			AS ranking,
+	ra.average 			AS best,
+	comp.id         	AS competition_id,
+    comp.name       	AS competition_name,
+    cpn.state_id  		AS competition_state,
+    dmp.value1      	AS time_1,
+    dmp.value2      	AS time_2,
+    dmp.value3      	AS time_3,
+    dmp.value4      	AS time_4,
+    dmp.value5      	AS time_5,
+    STR_TO_DATE(CONCAT(comp.year, ',', comp.endMonth, ',', comp.endDay), '%Y,%m,%d') AS ts
+FROM
+	datalake.ranking_average ra
+		JOIN datalake.competitors cpr on ra.wca_id = cpr.wca_id
+		LEFT JOIN app.registered_users ru on ra.wca_id = ru.wca_id
+		LEFT JOIN dump.Results dmp on (ra.wca_id = dmp.personId and ra.event_id = dmp.eventId)
+		LEFT JOIN dump.Competitions comp on dmp.competitionId = comp.id
+		LEFT JOIN datalake.competitions cpn on dmp.competitionId = cpn.competition_id 
+WHERE
+	ra.average = dmp.average
+    AND cpr.wca_name IS NOT NULL
+	AND ra.state_id = sqlc.arg(stateID)
+	AND ra.event_id = sqlc.arg(eventID)
+ORDER BY ra.ranking ASC
 ;
