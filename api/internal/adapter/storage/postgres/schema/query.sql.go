@@ -487,6 +487,37 @@ func (q *Queries) GetRankingSingle(ctx context.Context, arg GetRankingSinglePara
 	return items, nil
 }
 
+const getStates = `-- name: GetStates :many
+SELECT
+    state_id,
+    state_name
+FROM
+    app.states
+`
+
+func (q *Queries) GetStates(ctx context.Context) ([]AppState, error) {
+	rows, err := q.db.QueryContext(ctx, getStates)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []AppState
+	for rows.Next() {
+		var i AppState
+		if err := rows.Scan(&i.StateID, &i.StateName); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const search = `-- name: Search :many
 SELECT
 	c.wca_id		AS wca_id,

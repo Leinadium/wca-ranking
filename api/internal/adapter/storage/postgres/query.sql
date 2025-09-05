@@ -178,3 +178,11 @@ WHERE
 	AND ra.event_id = sqlc.arg(eventID)
 ORDER BY ra.ranking ASC
 ;
+
+-- name: GetStates :many
+SELECT
+    state_id,
+    state_name
+FROM
+    app.states
+;
