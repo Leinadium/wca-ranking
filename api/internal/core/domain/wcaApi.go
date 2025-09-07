@@ -1,7 +1,8 @@
 package domain
 
+import "time"
+
 type WCALatestData struct {
-	ExportDate string
-	SQLURL     string
-	TSVURL     string
+	Timestamp   time.Time
+	DownloadUrl string
 }

@@ -3,7 +3,6 @@ package service
 import (
 	"archive/zip"
 	"errors"
-	"fmt"
 	"io"
 	"os"
 
@@ -48,7 +47,7 @@ func createFile() (*File, error) {
 type FileService struct {
 }
 
-func (f *FileService) FromReader(reader io.Reader) (domain.File, error) {
+func (f *FileService) FromRaw(reader domain.RawFile) (domain.File, error) {
 	file, err := createFile()
 	if err != nil {
 		return nil, err
@@ -59,7 +58,7 @@ func (f *FileService) FromReader(reader io.Reader) (domain.File, error) {
 	}
 	if n == 0 {
 		// TODO: const error
-		return nil, fmt.Errorf("empty reader")
+		return nil, errors.New("empty reader")
 	}
 	return file, nil
 }
