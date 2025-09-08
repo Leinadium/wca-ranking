@@ -3,7 +3,7 @@ package domain
 import "time"
 
 type User struct {
-	WcaID        string
+	WCAID        string
 	StateID      string
 	RegisterDate time.Time
 }

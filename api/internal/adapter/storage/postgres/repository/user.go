@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"errors"
 
 	"leinadium.dev/wca-ranking/internal/adapter/storage/postgres/schema"
 	"leinadium.dev/wca-ranking/internal/core/domain"
@@ -17,15 +18,18 @@ func (r *UserRepository) User(ctx context.Context, id domain.WCAID) (*domain.Use
 		return nil, err
 	}
 	return &domain.User{
-		WcaID:        row.WcaID,
+		WCAID:        row.WcaID,
 		StateID:      row.StateID,
 		RegisterDate: row.RegisterDate,
 	}, nil
 }
 
 func (r *UserRepository) SetUser(ctx context.Context, user *domain.User) error {
+	if user == nil {
+		return errors.New("user is nil")
+	}
 	return r.query.SetUser(ctx, schema.SetUserParams{
-		Wcaid:        user.WcaID,
+		Wcaid:        user.WCAID,
 		Stateid:      user.StateID,
 		Registerdate: user.RegisterDate,
 	})
