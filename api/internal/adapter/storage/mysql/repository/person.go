@@ -5,7 +5,7 @@ import (
 	"errors"
 
 	"github.com/guregu/null"
-	"leinadium.dev/wca-ranking/internal/adapter/storage/postgres/schema"
+	"leinadium.dev/wca-ranking/internal/adapter/storage/mysql/schema"
 	"leinadium.dev/wca-ranking/internal/core/domain"
 	"leinadium.dev/wca-ranking/pkg/utils"
 )

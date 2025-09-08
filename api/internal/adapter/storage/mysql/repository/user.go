@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"leinadium.dev/wca-ranking/internal/adapter/storage/postgres/schema"
+	"leinadium.dev/wca-ranking/internal/adapter/storage/mysql/schema"
 	"leinadium.dev/wca-ranking/internal/core/domain"
 )
 

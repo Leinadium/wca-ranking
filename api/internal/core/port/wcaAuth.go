@@ -6,6 +6,10 @@ import (
 	"leinadium.dev/wca-ranking/internal/core/domain"
 )
 
+type WCATokenRequester interface {
+	AccessToken(ctx context.Context, code string) string
+}
+
 type WCATokenService interface {
 	// AuthEndpoint generates an authentication endpoint to be used by the user
 	AuthEndpoint() (string, error)
