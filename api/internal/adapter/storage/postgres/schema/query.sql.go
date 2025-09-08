@@ -518,6 +518,24 @@ func (q *Queries) GetStates(ctx context.Context) ([]AppState, error) {
 	return items, nil
 }
 
+const getUser = `-- name: GetUser :one
+SELECT
+    wca_id,
+    state_id,
+    register_date
+FROM
+    app.registered_users
+WHERE
+    wca_id = ?
+`
+
+func (q *Queries) GetUser(ctx context.Context, wcaid string) (AppRegisteredUser, error) {
+	row := q.db.QueryRowContext(ctx, getUser, wcaid)
+	var i AppRegisteredUser
+	err := row.Scan(&i.WcaID, &i.StateID, &i.RegisterDate)
+	return i, err
+}
+
 const search = `-- name: Search :many
 SELECT
 	c.wca_id		AS wca_id,
@@ -562,4 +580,27 @@ func (q *Queries) Search(ctx context.Context, arg SearchParams) ([]SearchRow, er
 		return nil, err
 	}
 	return items, nil
+}
+
+const setUser = `-- name: SetUser :exec
+INSERT INTO app.registered_users(
+    wca_id, state_id, register_date
+) VALUES (
+    ?,
+    ?,
+    ?
+)
+ON DUPLICATE KEY UPDATE
+    wca_id=wca_id, state_id=state_id, register_date=register_date
+`
+
+type SetUserParams struct {
+	Wcaid        string
+	Stateid      string
+	Registerdate time.Time
+}
+
+func (q *Queries) SetUser(ctx context.Context, arg SetUserParams) error {
+	_, err := q.db.ExecContext(ctx, setUser, arg.Wcaid, arg.Stateid, arg.Registerdate)
+	return err
 }

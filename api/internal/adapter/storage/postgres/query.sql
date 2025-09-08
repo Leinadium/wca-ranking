@@ -186,3 +186,26 @@ SELECT
 FROM
     app.states
 ;
+
+-- name: GetUser :one
+SELECT
+    wca_id,
+    state_id,
+    register_date
+FROM
+    app.registered_users
+WHERE
+    wca_id = sqlc.arg(wcaID)
+;
+
+-- name: SetUser :exec
+INSERT INTO app.registered_users(
+    wca_id, state_id, register_date
+) VALUES (
+    sqlc.arg(wcaID),
+    sqlc.arg(stateID),
+    sqlc.arg(registerDate)
+)
+ON DUPLICATE KEY UPDATE
+    wca_id=wca_id, state_id=state_id, register_date=register_date
+;
