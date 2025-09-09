@@ -26,7 +26,15 @@ type (
 		ExportURL    string `toml:"export_url"`
 		ClientId     string `toml:"client_id"`
 		ClientSecret string `toml:"client_secret"`
-		RedirectURI  string `toml:"redirect_uri"`
+
+		Endpoints struct {
+			Me             string `toml:"me"`
+			LatestData     string `toml:"latest_data"`
+			OAuthAuthorize string `toml:"ouath_authorize"`
+			OAuthToken     string `toml:"oauth_token"`
+		} `toml:"endpoints"`
+
+		RedirectURI string `toml:"redirect_uri"`
 	}
 	Auth struct {
 		RegisterTimeout float32 `toml:"register_timeout"`
