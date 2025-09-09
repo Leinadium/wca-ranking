@@ -1,6 +1,11 @@
 package server
 
 import (
+	"context"
+	"fmt"
+	"net"
+	"net/http"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"leinadium.dev/wca-ranking/internal/adapter/config"
@@ -9,6 +14,7 @@ import (
 
 type Server struct {
 	engine *gin.Engine
+	server *http.Server
 }
 
 func NewServer(
@@ -16,6 +22,7 @@ func NewServer(
 	handlers []handler.Handler,
 	groups []handler.HandlerGroup,
 ) *Server {
+	server := &http.Server{Addr: fmt.Sprintf(":%d", config.Port)}
 	engine := gin.Default()
 
 	engine.SetTrustedProxies(nil)
@@ -36,9 +43,19 @@ func NewServer(
 		engine.Handle(string(handler.Metadata().Method), handler.Metadata().Pattern, handler.Handle())
 	}
 
-	return &Server{engine: engine}
+	return &Server{engine: engine, server: server}
 }
 
-func (s *Server) Run() {
-	return s.engine.Run()
+func (s *Server) Run(ctx context.Context) error {
+	ln, err := net.Listen("tcp", s.server.Addr)
+	if err != nil {
+		return err
+	}
+
+	go s.server.Serve(ln)
+	return nil
+}
+
+func (s *Server) Stop(ctx context.Context) error {
+	return s.server.Shutdown(ctx)
 }

@@ -2,21 +2,24 @@ package fx
 
 import (
 	"go.uber.org/fx"
+	"leinadium.dev/wca-ranking/internal/adapter/config"
 	"leinadium.dev/wca-ranking/internal/adapter/server"
+	"leinadium.dev/wca-ranking/internal/adapter/server/handler"
 	"leinadium.dev/wca-ranking/internal/adapter/server/handler/routes"
 )
 
 var (
 	ServerModule = fx.Module("server",
-		fx.Provide(server.NewServer),
+		fx.Provide(NewFXServer),
 		fx.Provide(routes.NewStatesGroup),
+
+		// start
+		fx.Invoke(func(*server.Server) {}),
 	)
 )
 
-func NewFXServer(lc fx.Lifecycle, sv *server.Server) {
-	lc.Append(fx.Hook{
-		OnStart: func (ctx func(context.Context) error {
-			go sv.Run()
-		}),
-	})
+func NewFXServer(lc fx.Lifecycle, config *config.Server, handlers []handler.Handler, groups []handler.HandlerGroup) *server.Server {
+	srv := server.NewServer(config, handlers, groups)
+	lc.Append(fx.Hook{OnStart: srv.Run, OnStop: srv.Stop})
+	return srv
 }
