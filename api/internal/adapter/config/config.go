@@ -8,10 +8,16 @@ import (
 
 type (
 	Config struct {
-		DB   DB   `toml:"DB"`
-		WCA  WCA  `toml:"wca"`
-		Auth Auth `toml:"auth"`
+		Server Server `toml:"server"`
+		DB     DB     `toml:"db"`
+		WCA    WCA    `toml:"wca"`
+		Auth   Auth   `toml:"auth"`
 	}
+
+	Server struct {
+		Host string `toml:"host"`
+	}
+
 	DB struct {
 		Host     string `toml:"host"`
 		Port     int    `toml:"port"`
