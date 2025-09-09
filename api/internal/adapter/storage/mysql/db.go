@@ -1,4 +1,4 @@
-package postgres
+package mysql
 
 import (
 	"database/sql"
@@ -16,7 +16,7 @@ const (
 )
 
 type DB struct {
-	db *sql.DB
+	DB *sql.DB
 }
 
 func New(config *config.DB) (*DB, error) {
@@ -29,7 +29,7 @@ func New(config *config.DB) (*DB, error) {
 	db.SetMaxOpenConns(maxOpenConns)
 	db.SetMaxIdleConns(maxIdleConns)
 
-	return &DB{db: db}, nil
+	return &DB{DB: db}, nil
 }
 
 func createDNS(config *config.DB) string {

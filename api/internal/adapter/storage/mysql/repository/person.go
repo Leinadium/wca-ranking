@@ -14,6 +14,10 @@ type PersonRepository struct {
 	query *schema.Queries
 }
 
+func NewPersonRepository(query *schema.Queries) *PersonRepository {
+	return &PersonRepository{query: query}
+}
+
 func (p *PersonRepository) Person(ctx context.Context, id domain.WCAID) (*domain.Person, error) {
 	row, err := p.query.GetPersonInfo(ctx, schema.GetPersonInfoParams{
 		Wcaid: string(id),

@@ -14,6 +14,10 @@ type RankingRepository struct {
 	query *schema.Queries
 }
 
+func NewRankingRepository(query *schema.Queries) *RankingRepository {
+	return &RankingRepository{query: query}
+}
+
 func (r *RankingRepository) Ranking(
 	ctx context.Context,
 	event domain.EventID,

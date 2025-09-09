@@ -12,6 +12,10 @@ type SearchRepository struct {
 	query *schema.Queries
 }
 
+func NewSearchRepository(query *schema.Queries) *SearchRepository {
+	return &SearchRepository{query: query}
+}
+
 func (s *SearchRepository) Search(ctx context.Context, query string) ([]*domain.SearchResult, error) {
 	rows, err := s.query.Search(ctx, schema.SearchParams{Query: query})
 	if err != nil {

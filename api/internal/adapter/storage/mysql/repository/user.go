@@ -12,6 +12,10 @@ type UserRepository struct {
 	query *schema.Queries
 }
 
+func NewUserRepository(query *schema.Queries) *UserRepository {
+	return &UserRepository{query: query}
+}
+
 func (r *UserRepository) User(ctx context.Context, id domain.WCAID) (*domain.User, error) {
 	row, err := r.query.GetUser(ctx, string(id))
 	if err != nil {

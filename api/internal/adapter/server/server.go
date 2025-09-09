@@ -38,3 +38,7 @@ func NewServer(
 
 	return &Server{engine: engine}
 }
+
+func (s *Server) Run() {
+	return s.engine.Run()
+}
