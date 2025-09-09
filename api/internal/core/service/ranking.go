@@ -11,6 +11,10 @@ type RankingService struct {
 	rr port.RankingService
 }
 
+func NewRankingService(rr port.RankingRepository) *RankingService {
+	return &RankingService{rr: rr}
+}
+
 func (rs *RankingService) Ranking(
 	ctx context.Context,
 	event domain.EventID,

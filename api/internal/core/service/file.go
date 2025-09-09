@@ -44,7 +44,10 @@ func createFile() (*File, error) {
 	return &File{OSFile: f}, nil
 }
 
-type FileService struct {
+type FileService struct{}
+
+func NewFileService() *FileService {
+	return &FileService{}
 }
 
 func (f *FileService) FromRaw(reader domain.RawFile) (domain.File, error) {

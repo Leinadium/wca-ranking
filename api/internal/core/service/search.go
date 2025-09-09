@@ -11,6 +11,10 @@ type SearchService struct {
 	ss port.SearchRepository
 }
 
+func NewSearchService(ss port.SearchRepository) *SearchService {
+	return &SearchService{ss: ss}
+}
+
 func (s *SearchService) Search(ctx context.Context, query string) ([]*domain.SearchResult, error) {
 	return s.ss.Search(ctx, query)
 }

@@ -11,6 +11,10 @@ type PersonService struct {
 	pr port.PersonRepository
 }
 
+func NewPersonService(pr port.PersonRepository) *PersonService {
+	return &PersonService{pr: pr}
+}
+
 func (ps *PersonService) Person(ctx context.Context, id domain.WCAID) (*domain.Person, error) {
 	return ps.pr.Person(ctx, id)
 }

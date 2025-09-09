@@ -11,6 +11,10 @@ type UserService struct {
 	r port.UserRepository
 }
 
+func NewUserService(r port.UserRepository) *UserService {
+	return &UserService{r: r}
+}
+
 func (s *UserService) User(ctx context.Context, id domain.WCAID) (*domain.User, error) {
 	return s.r.User(ctx, id)
 }
