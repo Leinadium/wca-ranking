@@ -8,6 +8,7 @@ func Main() {
 		StorageModule,
 		WCAModule,
 		ServicesModule,
+		ServerModule,
 	)
 
 	app.Run()

@@ -5,7 +5,7 @@ import "leinadium.dev/wca-ranking/internal/adapter/config"
 func NewWCATokenService(config config.WCA) *WCATokenService {
 	return &WCATokenService{
 		requester:         NewRequester(),
-		clientID:          config.ClientId,
+		clientID:          config.ClientID,
 		clientSecret:      config.ClientSecret,
 		endpointAuthorize: config.Endpoints.OAuthAuthorize,
 		endpointToken:     config.Endpoints.OAuthToken,

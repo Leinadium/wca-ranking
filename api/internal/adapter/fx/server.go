@@ -8,18 +8,34 @@ import (
 	"leinadium.dev/wca-ranking/internal/adapter/server/handler/routes"
 )
 
+type ServerParams struct {
+	fx.In
+
+	Config   *config.Server
+	Handlers []handler.Handler       `group:"handlers"`
+	Groups   []*handler.HandlerGroup `group:"groups"`
+}
+
 var (
 	ServerModule = fx.Module("server",
 		fx.Provide(NewFXServer),
-		fx.Provide(routes.NewStatesGroup),
+		fx.Provide(AsGroup(routes.NewStatesGroup)),
 
 		// start
 		fx.Invoke(func(*server.Server) {}),
 	)
 )
 
-func NewFXServer(lc fx.Lifecycle, config *config.Server, handlers []handler.Handler, groups []handler.HandlerGroup) *server.Server {
-	srv := server.NewServer(config, handlers, groups)
+func NewFXServer(lc fx.Lifecycle, p ServerParams) *server.Server {
+	srv := server.NewServer(p.Config, p.Handlers, p.Groups)
 	lc.Append(fx.Hook{OnStart: srv.Run, OnStop: srv.Stop})
 	return srv
+}
+
+func AsGroup(f any) any {
+	return fx.Annotate(f, fx.ResultTags(`group:"groups"`))
+}
+
+func AsHandler(f any) any {
+	return fx.Annotate(f, fx.As(new(handler.Handler)), fx.ResultTags(`group:"handlers"`))
 }

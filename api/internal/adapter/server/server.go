@@ -20,11 +20,9 @@ type Server struct {
 func NewServer(
 	config *config.Server,
 	handlers []handler.Handler,
-	groups []handler.HandlerGroup,
+	groups []*handler.HandlerGroup,
 ) *Server {
-	server := &http.Server{Addr: fmt.Sprintf(":%d", config.Port)}
 	engine := gin.Default()
-
 	engine.SetTrustedProxies(nil)
 	engine.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{config.Host, "http://localhost:5173"},
@@ -41,6 +39,11 @@ func NewServer(
 	}
 	for _, handler := range handlers {
 		engine.Handle(string(handler.Metadata().Method), handler.Metadata().Pattern, handler.Handle())
+	}
+
+	server := &http.Server{
+		Addr:    fmt.Sprintf(":%d", config.Port),
+		Handler: engine.Handler(),
 	}
 
 	return &Server{engine: engine, server: server}

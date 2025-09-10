@@ -31,7 +31,7 @@ type (
 	}
 	WCA struct {
 		ExportURL    string `toml:"export_url"`
-		ClientId     string `toml:"client_id"`
+		ClientID     string `toml:"client_id"`
 		ClientSecret string `toml:"client_secret"`
 
 		Endpoints struct {
@@ -46,11 +46,13 @@ type (
 	Auth struct {
 		RegisterTimeout float32 `toml:"register_timeout"`
 	}
+
+	ConfigFile string
 )
 
-func New(tomlfile string) *Config {
+func New(tomlfile ConfigFile) *Config {
 	var config Config
-	if _, err := toml.DecodeFile(tomlfile, &config); err != nil {
+	if _, err := toml.DecodeFile(string(tomlfile), &config); err != nil {
 		log.Fatalf("Could not read toml: %s", err.Error())
 	}
 	return &config

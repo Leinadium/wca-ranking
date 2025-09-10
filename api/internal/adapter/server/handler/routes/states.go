@@ -3,11 +3,11 @@ package routes
 import (
 	"github.com/gin-gonic/gin"
 	"leinadium.dev/wca-ranking/internal/adapter/server/handler"
-	"leinadium.dev/wca-ranking/internal/core/service"
+	"leinadium.dev/wca-ranking/internal/core/port"
 )
 
 type GetStates struct {
-	svc *service.StateService
+	svc port.StateService
 }
 
 func (s *GetStates) Handle() gin.HandlerFunc {
@@ -25,7 +25,7 @@ func (s *GetStates) Metadata() *handler.RouteMetadata {
 	return &handler.RouteMetadata{Method: handler.GET, Pattern: "/"}
 }
 
-func NewStatesGroup(svc *service.StateService) *handler.HandlerGroup {
+func NewStatesGroup(svc port.StateService) *handler.HandlerGroup {
 	return handler.NewHandlerGroup("/states", []handler.Handler{
 		&GetStates{svc: svc},
 	})
