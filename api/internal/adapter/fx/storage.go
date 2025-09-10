@@ -16,6 +16,7 @@ var StorageModule = fx.Module("storage",
 	fx.Provide(fx.Annotate(repository.NewStateRepository, fx.As(new(port.StateRepository)))),
 	fx.Provide(fx.Annotate(repository.NewUserRepository, fx.As(new(port.UserRepository)))),
 
-	fx.Provide(fx.Annotate(mysql.New, fx.As(new(schema.DBTX)))),
+	fx.Provide(mysql.New),
+	fx.Provide(mysql.Schema),
 	fx.Provide(schema.New),
 )

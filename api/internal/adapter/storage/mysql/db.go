@@ -7,6 +7,7 @@ import (
 
 	"github.com/go-sql-driver/mysql"
 	"leinadium.dev/wca-ranking/internal/adapter/config"
+	"leinadium.dev/wca-ranking/internal/adapter/storage/mysql/schema"
 )
 
 const (
@@ -30,6 +31,10 @@ func New(config *config.DB) (*DB, error) {
 	db.SetMaxIdleConns(maxIdleConns)
 
 	return &DB{DB: db}, nil
+}
+
+func Schema(db *DB) schema.DBTX {
+	return db.DB
 }
 
 func createDNS(config *config.DB) string {
