@@ -22,6 +22,8 @@ func Success(c *gin.Context, payload any) {
 }
 
 func Failure(c *gin.Context, code int, err *serverError) {
+	if err.Err != nil {
+		c.Error(err.Err)
+	}
 	Response(c, code, &response{Success: false, Payload: err})
-	// TODO: log error
 }

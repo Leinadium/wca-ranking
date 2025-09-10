@@ -21,6 +21,7 @@ func NewServer(
 	config *config.Server,
 	handlers []handler.Handler,
 	groups []*handler.HandlerGroup,
+	middlewares []gin.HandlerFunc,
 ) *Server {
 	engine := gin.Default()
 	engine.SetTrustedProxies(nil)
@@ -30,6 +31,8 @@ func NewServer(
 		AllowHeaders:     []string{"Content-Type"},
 		AllowCredentials: true,
 	}))
+
+	engine.Use(middlewares...)
 
 	for _, group := range groups {
 		g := engine.Group(group.Pattern, group.Middlewares...)
