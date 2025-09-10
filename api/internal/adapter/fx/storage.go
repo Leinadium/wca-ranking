@@ -9,15 +9,13 @@ import (
 	"leinadium.dev/wca-ranking/internal/core/port"
 )
 
-var (
-	StorageModule = fx.Module("storage",
-		fx.Provide(fx.Annotate(repository.NewPersonRepository, fx.As(new(port.PersonRepository)))),
-		fx.Provide(fx.Annotate(repository.NewRankingRepository, fx.As(new(port.RankingRepository)))),
-		fx.Provide(fx.Annotate(repository.NewSearchRepository, fx.As(new(port.SearchRepository)))),
-		fx.Provide(fx.Annotate(repository.NewStateRepository, fx.As(new(port.StateRepository)))),
-		fx.Provide(fx.Annotate(repository.NewUserRepository, fx.As(new(port.UserRepository)))),
+var StorageModule = fx.Module("storage",
+	fx.Provide(fx.Annotate(repository.NewPersonRepository, fx.As(new(port.PersonRepository)))),
+	fx.Provide(fx.Annotate(repository.NewRankingRepository, fx.As(new(port.RankingRepository)))),
+	fx.Provide(fx.Annotate(repository.NewSearchRepository, fx.As(new(port.SearchRepository)))),
+	fx.Provide(fx.Annotate(repository.NewStateRepository, fx.As(new(port.StateRepository)))),
+	fx.Provide(fx.Annotate(repository.NewUserRepository, fx.As(new(port.UserRepository)))),
 
-		fx.Provide(mysql.New),
-		fx.Provide(func(db *mysql.DB) *schema.Queries { return schema.New(db.DB) }),
-	)
+	fx.Provide(fx.Annotate(mysql.New, fx.As(new(schema.DBTX)))),
+	fx.Provide(schema.New),
 )

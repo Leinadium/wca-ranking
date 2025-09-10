@@ -16,16 +16,6 @@ type ServerParams struct {
 	Groups   []*handler.HandlerGroup `group:"groups"`
 }
 
-var (
-	ServerModule = fx.Module("server",
-		fx.Provide(NewFXServer),
-		fx.Provide(AsGroup(routes.NewStatesGroup)),
-
-		// start
-		fx.Invoke(func(*server.Server) {}),
-	)
-)
-
 func NewFXServer(lc fx.Lifecycle, p ServerParams) *server.Server {
 	srv := server.NewServer(p.Config, p.Handlers, p.Groups)
 	lc.Append(fx.Hook{OnStart: srv.Run, OnStop: srv.Stop})
@@ -39,3 +29,11 @@ func AsGroup(f any) any {
 func AsHandler(f any) any {
 	return fx.Annotate(f, fx.As(new(handler.Handler)), fx.ResultTags(`group:"handlers"`))
 }
+
+var ServerModule = fx.Module("server",
+	fx.Provide(NewFXServer),
+	fx.Provide(AsGroup(routes.NewStatesGroup)),
+
+	// start
+	fx.Invoke(func(*server.Server) {}),
+)
