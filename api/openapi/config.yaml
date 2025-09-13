@@ -6,4 +6,4 @@ generate:
   embedded-spec: true
   models: true
   strict-server: true
-output: internal/adaptar/server/schema/server.gen.go
+output: schema/server.gen.go
