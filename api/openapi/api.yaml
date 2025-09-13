@@ -1,0 +1,104 @@
+openapi: 3.0.3
+info:
+  title: ranking.leinadium.dev
+  version: 0.1.0
+  description: |-
+    Uma descrição muito muito longa.
+  contact:
+    url: "leinadium.dev"
+    email: contact@leinadium.dev
+# servers:
+#   - url: ranking.leinadium.dev/api/v1
+tags:
+  - name: Status
+    description: Current application status.
+  - name: States
+    description: List available states
+  - name: Auth
+    description: Authentication operations.
+  - name: Person
+    description: Person/Competitor related operations
+  - name: Ranking
+    description: Ranking related operations
+
+paths:
+  # /status:
+  #   get:
+  #     tags:
+  #       - status
+  #     summary: Get current database update status
+  #     description: Get the last database update/synchronization with WCA
+  #     responses:
+  #       "200":
+  #         description: "Information retrieved successfully"
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: "#/components/schemas/Status"
+  #       "500":
+  #         description: "Unexpected error"
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: "#/components/schemas/Error"
+  /states:
+    get:
+      tags:
+        - states
+      summary: Get current available states
+      description: Get current states stored in the database available for querying
+      responses:
+        "200":
+          description: "Information retrieved successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/States"
+        "500":
+          description: "Unexpected error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Error code
+          example: "023"
+        message:
+          type: string
+          description: Error description
+          example: Could not reach database. Try again later
+    Status:
+      type: object
+      properties:
+        lastUpdate:
+          type: string
+          format: date-time
+          description: Last update timestamp
+          example: "2025-08-01T00:00:00.000Z"
+    States:
+      type: array
+      items:
+        type: string
+        description: "State id"
+        example: "RJ"
+
+  securitySchemes:
+    api_auth:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://ranking.leinadium.dev/v1/
+          scopes:
+            read:person: read persons
+    api_token:
+      type: apiKey
+      name: Authorization
+      description: "Access token as 'Bearer {token}'"
+      in: header

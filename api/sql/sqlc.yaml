@@ -6,4 +6,4 @@ sql:
     gen:
       go:
         package: "schema"
-        out: "schema"
+        out: "../internal/adapter/storage/mysql/schema"

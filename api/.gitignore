@@ -33,3 +33,7 @@ go.work.sum
 
 # config file
 **/*config.toml
+
+# auto generated files
+**/*.sql.go
+**/*.gen.go

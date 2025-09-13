@@ -1,3 +1,5 @@
+//go:generate go run github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen -config ../../../openapi/config.yaml ../../../openapi/api.yaml
+
 package server
 
 import (
@@ -8,8 +10,10 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	ginmiddleware "github.com/oapi-codegen/gin-middleware"
 	"leinadium.dev/wca-ranking/internal/adapter/config"
 	"leinadium.dev/wca-ranking/internal/adapter/server/handler"
+	"leinadium.dev/wca-ranking/internal/adapter/server/schema"
 )
 
 type Server struct {
@@ -19,9 +23,7 @@ type Server struct {
 
 func NewServer(
 	config *config.Server,
-	handlers []handler.Handler,
-	groups []*handler.HandlerGroup,
-	middlewares []gin.HandlerFunc,
+	handler *handler.ServerHandler,
 ) *Server {
 	engine := gin.Default()
 	engine.SetTrustedProxies(nil)
@@ -32,23 +34,16 @@ func NewServer(
 		AllowCredentials: true,
 	}))
 
-	engine.Use(middlewares...)
+	swagger, _ := schema.GetSwagger()
+	engine.Use(ginmiddleware.OapiRequestValidator(swagger))
 
-	for _, group := range groups {
-		g := engine.Group(group.Pattern, group.Middlewares...)
-		for _, handler := range group.Handlers {
-			g.Handle(string(handler.Metadata().Method), handler.Metadata().Pattern, handler.Handle())
-		}
-	}
-	for _, handler := range handlers {
-		engine.Handle(string(handler.Metadata().Method), handler.Metadata().Pattern, handler.Handle())
-	}
+	strictHandler := schema.NewStrictHandler(handler, []schema.StrictMiddlewareFunc{})
+	schema.RegisterHandlers(engine, strictHandler)
 
 	server := &http.Server{
 		Addr:    fmt.Sprintf(":%d", config.Port),
 		Handler: engine.Handler(),
 	}
-
 	return &Server{engine: engine, server: server}
 }
 

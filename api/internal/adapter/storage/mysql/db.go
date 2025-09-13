@@ -1,3 +1,5 @@
+//go:generate sqlc generate -f ../../../../sql/sqlc.yaml
+
 package mysql
 
 import (

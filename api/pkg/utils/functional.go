@@ -8,6 +8,16 @@ func Map[T, U any](in []T, f func(T) U) []U {
 	return r
 }
 
+func MapNotNull[T, U any](in []*T, f func(*T) U) []U {
+	var r []U
+	for _, v := range in {
+		if v != nil {
+			r = append(r, f(v))
+		}
+	}
+	return r
+}
+
 func Filter[T any](in []T, f func(T) bool) []T {
 	var r []T
 	for _, v := range in {
