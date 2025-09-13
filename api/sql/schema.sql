@@ -125,9 +125,9 @@ CREATE TABLE dump.results_by_state (
 );
 
 CREATE TABLE dump.Results (
-    personId            VARCHAR(10),
-    eventId             VARCHAR(6),
-    competitionId       VARCHAR(20),
+    personId            VARCHAR(10) NOT NULL,
+    eventId             VARCHAR(6) NOT NULL,
+    competitionId       VARCHAR(20) NOT NULL,
     value1              INT(11),
     value2              INT(11),
     value3              INT(11),
@@ -137,6 +137,6 @@ CREATE TABLE dump.Results (
 );
 
 CREATE TABLE dump.Competitions (
-    id      VARCHAR(10),
-    name    VARCHAR(80)
+    id      VARCHAR(10) NOT NULL,
+    name    VARCHAR(80) NOT NULL
 );
