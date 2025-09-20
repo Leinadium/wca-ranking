@@ -209,3 +209,10 @@ INSERT INTO app.registered_users(
 ON DUPLICATE KEY UPDATE
     wca_id=wca_id, state_id=state_id, register_date=register_date
 ;
+
+-- name: GetCurrentDate :one
+SELECT
+    last_update
+FROM
+    datalake.export_date
+;

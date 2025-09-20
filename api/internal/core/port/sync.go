@@ -1,12 +1,17 @@
 package port
 
 import (
+	"context"
 	"time"
 
 	"leinadium.dev/wca-ranking/internal/core/domain"
 )
 
-type WCAStorage interface {
+type SyncRepository interface {
+	CurrentDate(context.Context) (*time.Time, error)
+}
+
+type SyncService interface {
 	// ImportFile imports a sql file to the storage
 	ImportFile(file domain.File) error
 
@@ -17,7 +22,7 @@ type WCAStorage interface {
 	Refresh() error
 
 	// CurrentDate gets the current dump date stored in the database
-	CurrentDate() (time.Time, error)
+	CurrentDate(context.Context) (*time.Time, error)
 
 	// SetCurrentDate updates the current dump date
 	SetCurrentDate(time.Time) error

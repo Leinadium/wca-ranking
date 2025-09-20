@@ -22,25 +22,25 @@ tags:
     description: Ranking related operations
 
 paths:
-  # /status:
-  #   get:
-  #     tags:
-  #       - status
-  #     summary: Get current database update status
-  #     description: Get the last database update/synchronization with WCA
-  #     responses:
-  #       "200":
-  #         description: "Information retrieved successfully"
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: "#/components/schemas/Status"
-  #       "500":
-  #         description: "Unexpected error"
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: "#/components/schemas/Error"
+  /status:
+    get:
+      tags:
+        - status
+      summary: Get current database update status
+      description: Get the last database update/synchronization with WCA
+      responses:
+        "200":
+          description: "Information retrieved successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+        "500":
+          description: "Unexpected error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
   /states:
     get:
       tags:
