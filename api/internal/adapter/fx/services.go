@@ -13,4 +13,5 @@ var ServicesModule = fx.Module("service",
 	fx.Provide(fx.Annotate(service.NewSearchService, fx.As(new(port.SearchService)))),
 	fx.Provide(fx.Annotate(service.NewStateService, fx.As(new(port.StateService)))),
 	fx.Provide(fx.Annotate(service.NewUserService, fx.As(new(port.UserService)))),
+	fx.Provide(fx.Annotate(service.NewSyncService, fx.As(new(port.SyncService)))),
 )

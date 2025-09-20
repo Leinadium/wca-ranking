@@ -8,12 +8,12 @@ import (
 	"leinadium.dev/wca-ranking/pkg/utils"
 )
 
-type StateRepository struct {
-	query *schema.Queries
-}
-
 func NewStateRepository(query *schema.Queries) *StateRepository {
 	return &StateRepository{query: query}
+}
+
+type StateRepository struct {
+	query *schema.Queries
 }
 
 func (s *StateRepository) States(ctx context.Context) ([]*domain.StateID, error) {

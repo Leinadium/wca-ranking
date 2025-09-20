@@ -20,7 +20,7 @@ func NewFXServer(lc fx.Lifecycle, p ServerParams) *server.Server {
 	return srv
 }
 
-var ServerModule = fx.Module("server2",
+var ServerModule = fx.Module("server",
 	fx.Provide(NewFXServer),
 	fx.Provide(handler.NewServerHandler),
 	fx.Invoke(func(*server.Server) {}),
