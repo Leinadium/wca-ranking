@@ -25,7 +25,7 @@ paths:
   /status:
     get:
       tags:
-        - status
+        - Status
       summary: Get current database update status
       description: Get the last database update/synchronization with WCA
       responses:
@@ -44,7 +44,7 @@ paths:
   /states:
     get:
       tags:
-        - states
+        - States
       summary: Get current available states
       description: Get current states stored in the database available for querying
       responses:
@@ -54,6 +54,33 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/States"
+        "500":
+          description: "Unexpected error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /search:
+    get:
+      tags:
+        - Person
+      summary: Search people on database
+      description: Search for competitors' names in the database. The search term may be the full name or part of it
+      parameters:
+        - in: query
+          name: s
+          description: The search query text
+          required: true
+          example: "Silva"
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Information retrieved successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Search"
         "500":
           description: "Unexpected error"
           content:
@@ -86,9 +113,28 @@ components:
       type: array
       items:
         type: string
-        description: "State id"
+        description: State ID
         example: "RJ"
-
+    SearchItem:
+      type: object
+      properties:
+        wcaId:
+          type: string
+          description: WCA Competitor's ID
+          example: 2018GUIM02
+        wcaName:
+          type: string
+          description: WCA Competitor's Name
+          example: João da Silva
+        stateId:
+          type: string
+          description: State ID
+          example: PR
+    Search:
+      type: array
+      items:
+        $ref: "#/components/schemas/SearchItem"
+        
   securitySchemes:
     api_auth:
       type: oauth2
