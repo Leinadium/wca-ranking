@@ -25,7 +25,7 @@ func (s *SearchRepository) Search(ctx context.Context, query string) ([]*domain.
 		return &domain.SearchResult{
 			WCAID:   domain.WCAID(row.WcaID),
 			Name:    row.WcaName,
-			StateID: domain.NullStateID(SQLNullString(row.StateID)),
+			StateID: domain.NullStateID(utils.SQLNullString(row.StateID)),
 		}
 	}), nil
 }
