@@ -27,10 +27,10 @@ func (p *PersonRepository) Person(ctx context.Context, id domain.WCAID) (*domain
 	}
 	return &domain.Person{
 		Name:              row.Name,
-		State:             SQLNullString(row.StateID),
+		State:             utils.SQLNullString(row.StateID),
 		Registered:        row.Registered != 0,
 		TotalCompetitions: int(row.TotalCompetitions),
-		StateCompetitions: SQLNullInt32(row.StateCompetitions),
+		StateCompetitions: utils.SQLNullInt32(row.StateCompetitions),
 	}, nil
 }
 
@@ -64,16 +64,16 @@ func (p *PersonRepository) Rankings(ctx context.Context, id domain.WCAID, mode d
 					Mode:             mode,
 					Event:            row.EventID,
 					Ranking:          int(row.Ranking),
-					Best:             SQLNullInt32(row.Best),
-					CompetitionId:    SQLNullString(row.CompetitionID),
-					CompetitionName:  SQLNullString(row.CompetitionID),
-					CompetitionState: SQLNullString(row.CompetitionID),
+					Best:             utils.SQLNullInt32(row.Best),
+					CompetitionId:    utils.SQLNullString(row.CompetitionID),
+					CompetitionName:  utils.SQLNullString(row.CompetitionID),
+					CompetitionState: utils.SQLNullString(row.CompetitionID),
 					Times: [5]null.Int{
-						SQLNullInt32(row.Time1),
-						SQLNullInt32(row.Time2),
-						SQLNullInt32(row.Time3),
-						SQLNullInt32(row.Time4),
-						SQLNullInt32(row.Time5),
+						utils.SQLNullInt32(row.Time1),
+						utils.SQLNullInt32(row.Time2),
+						utils.SQLNullInt32(row.Time3),
+						utils.SQLNullInt32(row.Time4),
+						utils.SQLNullInt32(row.Time5),
 					},
 				}
 			}), nil
@@ -89,16 +89,16 @@ func (p *PersonRepository) Rankings(ctx context.Context, id domain.WCAID, mode d
 					Mode:             mode,
 					Event:            row.EventID,
 					Ranking:          int(row.Ranking),
-					Best:             SQLNullInt32(row.Best),
-					CompetitionId:    SQLNullString(row.CompetitionID),
-					CompetitionName:  SQLNullString(row.CompetitionID),
-					CompetitionState: SQLNullString(row.CompetitionID),
+					Best:             utils.SQLNullInt32(row.Best),
+					CompetitionId:    utils.SQLNullString(row.CompetitionID),
+					CompetitionName:  utils.SQLNullString(row.CompetitionID),
+					CompetitionState: utils.SQLNullString(row.CompetitionID),
 					Times: [5]null.Int{
-						SQLNullInt32(row.Time1),
-						SQLNullInt32(row.Time2),
-						SQLNullInt32(row.Time3),
-						SQLNullInt32(row.Time4),
-						SQLNullInt32(row.Time5),
+						utils.SQLNullInt32(row.Time1),
+						utils.SQLNullInt32(row.Time2),
+						utils.SQLNullInt32(row.Time3),
+						utils.SQLNullInt32(row.Time4),
+						utils.SQLNullInt32(row.Time5),
 					},
 				}
 			}), nil

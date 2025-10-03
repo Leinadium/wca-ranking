@@ -87,7 +87,92 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-
+  /person/results/{personId}:
+    get:
+      tags:
+        - Person
+      summary: Get person results in a tabular format
+      description: Get information of a person in the database in a array of tuples
+      parameters:
+        - in: path
+          name: personId
+          description: Person WCA's ID
+          example: "2018GUIM02"
+          schema:
+            $ref: "#/components/schemas/WCAID"
+      responses:
+        "200":
+          description: "Information retrieved successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PersonResults"
+        "500":
+          description: "Unexpected error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /person/info/{personId}:
+    get:
+      tags:
+        - Person
+      summary: Get person base information
+      description: Get base information of a person, such as name and competitions
+      parameters:
+        - in: path
+          name: personId
+          description: Person WCA's ID
+          example: "2018GUIM02"
+          schema:
+            $ref: "#/components/schemas/WCAID"
+      responses:
+        "200":
+          description: "Information retrieved successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PersonInfo"
+        "500":
+          description: "Unexpected error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /person/{mode}/{personId}:
+    get:
+      tags:
+        - Person
+      summary: Get person ranking
+      description: Get rankings of the person considering average or single
+      parameters:
+        - in: path
+          name: personId
+          description: Person WCA's ID
+          example: "2018GUIM02"
+          schema:
+            $ref: "#/components/schemas/WCAID"
+        - in: path
+          name: mode
+          description: "Filtering mode"
+          example: "average"
+          schema:
+            type: string
+            enum: ["average", "single"]
+      responses:
+        "200":
+          description: "Information retrieved successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PersonRankings"
+        "500":
+          description: "Unexpected error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    
 components:
   schemas:
     Error:
@@ -101,6 +186,36 @@ components:
           type: string
           description: Error description
           example: Could not reach database. Try again later
+    WCAID:
+      type: string
+      description: WCA Competitor's ID
+      example: 2018GUIM02
+    Event:
+      type: string
+      description: Event ID
+      example: "333"
+      enum:
+        - "333"
+        - "333bf"
+        - "333ft"
+        - "333mbf"
+        - "333mbo"
+        - "clock"
+        - "magic"
+        - "mmmagic"
+        - "minx"
+        - "pyram"
+        - "skewb"
+        - "sq1"
+        - "333fm"
+        - "333oh"
+        - "444bf"
+        - "555bf"
+        - "222"
+        - "444"
+        - "555"
+        - "666"
+        - "777"
     Status:
       type: object
       properties:
@@ -119,9 +234,7 @@ components:
       type: object
       properties:
         wcaId:
-          type: string
-          description: WCA Competitor's ID
-          example: 2018GUIM02
+          $ref: "#/components/schemas/WCAID"
         wcaName:
           type: string
           description: WCA Competitor's Name
@@ -134,7 +247,106 @@ components:
       type: array
       items:
         $ref: "#/components/schemas/SearchItem"
-        
+    PersonResult:
+      type: object
+      properties:
+        event:
+          $ref: "#/components/schemas/Event"
+        single:
+          type: integer
+          description: "Person's best single time in the event"
+          example: 12.34
+          nullable: true
+        average:
+          type: integer
+          description: "Person's best average time in the event"
+          example: 12.34
+          nullable: true
+        rankingSingle:
+          type: integer
+          description: "Person's ranking in the event considering its best single time"
+          example: 
+          nullable: false
+        rankingAverage:
+          type: integer
+          description: "Person's ranking in the event considering its best average time"
+          example: 13
+          nullable: false
+    PersonResults:
+      type: array
+      items:
+        $ref: "#/components/schemas/PersonResult"
+    PersonInfo:
+      type: object
+      properties:
+        name:
+          type: string
+          description: "Person's name"
+          example: "Pedro"
+          nullable: false
+        state:
+          type: string
+          description: State ID
+          example: "RJ"
+          nullable: true
+        registered:
+          type: boolean
+          description: "Person is registered on the website or not"
+          example: "true"
+          nullable: false
+        totalCompetitions:
+          type: integer
+          description: "Person's total number of competitions"
+          example: 10
+          nullable: false
+        stateCompetitions:
+          type: integer
+          description: "Person's total number of competitions in his state"
+          example: 5
+          nullable: false
+    PersonRankings:
+      type: array
+      items:
+        $ref: "#/components/schemas/PersonRanking"
+    PersonRanking:
+      type: object
+      properties:
+        event:
+          $ref: "#/components/schemas/Event"
+        ranking:
+          type: integer
+          description: "Person ranking"
+          example: 13
+          nullable: false
+        best:
+          type: integer
+          description: "Person's best result in the event"
+          example: 12.34
+          nullable: true
+        competitionId:
+          type: string
+          description: "Competition's ID in which the competitior obtained the best result"
+          example: "BoraBoraOpen2025"
+          nullable: true
+        competitionName:
+          type: string
+          description: "Competition's name in which the competitior obtained the best result"
+          example: "Bora Bora Open 2025"
+          nullable: true
+        competitionState:
+          type: string
+          description: "Competition's state in which the competitor obtained the best result"
+          nullable: true
+        times:
+          type: array
+          items:
+            type: integer
+            description: "A result in the person's average using WCA format"
+            example: 1234
+            nullable: true
+          minItems: 5
+          maxItems: 5
+
   securitySchemes:
     api_auth:
       type: oauth2
