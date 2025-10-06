@@ -15,6 +15,15 @@ func NewRankingService(rr port.RankingRepository) *RankingService {
 	return &RankingService{rr: rr}
 }
 
+func (rs *RankingService) RankingQuantity(
+	ctx context.Context,
+	event domain.EventID,
+	state domain.StateID,
+	mode domain.RankingMode,
+) (int, error) {
+	return rs.rr.RankingQuantity(ctx, event, state, mode)
+}
+
 func (rs *RankingService) Ranking(
 	ctx context.Context,
 	event domain.EventID,
