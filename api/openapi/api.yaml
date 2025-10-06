@@ -95,6 +95,7 @@ paths:
       description: Get information of a person in the database in a array of tuples
       parameters:
         - in: path
+          required: true
           name: personId
           description: Person WCA's ID
           example: "2018GUIM02"
@@ -121,6 +122,7 @@ paths:
       description: Get base information of a person, such as name and competitions
       parameters:
         - in: path
+          required: true
           name: personId
           description: Person WCA's ID
           example: "2018GUIM02"
@@ -147,12 +149,14 @@ paths:
       description: Get rankings of the person considering average or single
       parameters:
         - in: path
+          required: true
           name: personId
           description: Person WCA's ID
           example: "2018GUIM02"
           schema:
             $ref: "#/components/schemas/WCAID"
         - in: path
+          required: true
           name: mode
           description: "Filtering mode"
           example: "average"
@@ -172,7 +176,56 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-    
+  /ranking/{mode}/{event}/{state}:
+    get:
+      tags:
+        - Ranking
+      summary: Get ranking for the state
+      description: Get ranking for the state for this event and mode
+      parameters:
+        - in: path
+          required: true
+          name: mode
+          description: "Filtering mode"
+          example: "average"
+          schema:
+            type: string
+            enum: ["average", "single"]
+        - in: path
+          required: true
+          name: event
+          description: "Event ID"
+          example: "333"
+          schema:
+            $ref: "#/components/schemas/Event"
+        - in: path
+          required: true
+          name: state
+          description: "State ID"
+          example: "PR"
+          schema:
+            type: string
+        - in: query
+          required: false
+          name: from
+          description: First value in the pagination
+          example: 13
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: "Information retrieved successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Ranking"
+        "500":
+          description: "Unexpected error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
 components:
   schemas:
     Error:
@@ -346,6 +399,71 @@ components:
             nullable: true
           minItems: 5
           maxItems: 5
+    RankingEntry:
+      type: object
+      properties:
+        name:
+          type: string
+          description: "Person's name"
+          example: "Pedro"
+          nullable: false
+        wcaId:
+          $ref: "#/components/schemas/WCAID"
+        stateId:
+          type: string
+          description: "State ID"
+          example: "PR"
+        best:
+          type: integer
+          description: "Person's best result in the event"
+          example: 12.34
+          nullable: true
+        ranking:
+          type: integer
+          description: "Person ranking"
+          example: 13
+          nullable: false
+        registered:
+          type: boolean
+          description: "Person is registered on the website or not"
+          example: "true"
+        competitionId:
+          type: string
+          description: "Competition's ID in which the competitior obtained the best result"
+          example: "BoraBoraOpen2025"
+          nullable: true
+        competitionName:
+          type: string
+          description: "Competition's name in which the competitior obtained the best result"
+          example: "Bora Bora Open 2025"
+          nullable: true
+        competitionState:
+          type: string
+          description: "Competition's state in which the competitor obtained the best result"
+          nullable: true
+        times:
+          type: array
+          items:
+            type: integer
+            description: "A result in the person's average using WCA format"
+            example: 1234
+            nullable: true
+          minItems: 5
+          maxItems: 5
+        
+    Ranking:
+      type: object
+      properties:
+        totalItems:
+          type: integer
+          description: Total number of items
+        nextItem:
+          type:  integer
+          description: Next item in the pagination
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/RankingEntry"
 
   securitySchemes:
     api_auth:

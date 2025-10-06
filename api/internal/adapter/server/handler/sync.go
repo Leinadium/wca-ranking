@@ -9,10 +9,7 @@ import (
 func (s *ServerHandler) GetStatus(ctx context.Context, request schema.GetStatusRequestObject) (schema.GetStatusResponseObject, error) {
 	status, err := s.syncService.CurrentDate(ctx)
 	if err != nil {
-		return schema.GetStatus500JSONResponse{
-			Code:    &ErrDefaultCode,
-			Message: &ErrDefaultMessage,
-		}, nil
+		return schema.GetStatus500JSONResponse(ErrDefault), nil
 	} else {
 		return schema.GetStatus200JSONResponse{
 			LastUpdate: status,
