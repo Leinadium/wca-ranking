@@ -20,6 +20,7 @@ func (rs *RankingService) Ranking(
 	event domain.EventID,
 	state domain.StateID,
 	mode domain.RankingMode,
+	lower domain.RankingLowerBound,
 ) ([]*domain.RankingEntry, error) {
-	return rs.rr.Ranking(ctx, event, state, mode)
+	return rs.rr.Ranking(ctx, event, state, mode, lower)
 }

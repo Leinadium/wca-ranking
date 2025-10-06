@@ -18,21 +18,58 @@ func NewRankingRepository(query *schema.Queries) *RankingRepository {
 	return &RankingRepository{query: query}
 }
 
-func (r *RankingRepository) Ranking(
+func (r *RankingRepository) RankingQuantity(
 	ctx context.Context,
 	event domain.EventID,
 	state domain.StateID,
 	mode domain.RankingMode,
 ) (
+	int, error,
+) {
+	var (
+		q   int64
+		err error
+	)
+	switch mode {
+	case domain.RankingAverage:
+		q, err = r.query.GetRankingAverageTotal(ctx, schema.GetRankingAverageTotalParams{
+			Stateid: string(state),
+			Eventid: string(event),
+		})
+	case domain.RankingSingle:
+		q, err = r.query.GetRankingSingleTotal(ctx, schema.GetRankingSingleTotalParams{
+			Stateid: string(state),
+			Eventid: string(event),
+		})
+	}
+	if err != nil {
+		return 0, err
+	}
+	return int(q), nil
+}
+
+func (r *RankingRepository) Ranking(
+	ctx context.Context,
+	event domain.EventID,
+	state domain.StateID,
+	mode domain.RankingMode,
+	lower domain.RankingLowerBound,
+) (
 	[]*domain.RankingEntry,
 	error,
 ) {
+	cursor := int32(lower)
+	if cursor == 0 {
+		cursor = -1
+	}
+
 	switch mode {
 	case domain.RankingAverage:
 		{
 			rows, err := r.query.GetRankingAverage(ctx, schema.GetRankingAverageParams{
-				Stateid: string(state),
-				Eventid: string(event),
+				Stateid:       string(state),
+				Eventid:       string(event),
+				Rankingcursor: cursor,
 			})
 			if err != nil {
 				return nil, err
@@ -61,8 +98,9 @@ func (r *RankingRepository) Ranking(
 	case domain.RankingSingle:
 		{
 			rows, err := r.query.GetRankingSingle(ctx, schema.GetRankingSingleParams{
-				Stateid: string(state),
-				Eventid: string(event),
+				Stateid:       string(state),
+				Eventid:       string(event),
+				Rankingcursor: cursor,
 			})
 			if err != nil {
 				return nil, err

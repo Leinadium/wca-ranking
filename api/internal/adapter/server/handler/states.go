@@ -11,10 +11,7 @@ import (
 func (s *ServerHandler) GetStates(ctx context.Context, request schema.GetStatesRequestObject) (schema.GetStatesResponseObject, error) {
 	states, err := s.stateService.States(ctx)
 	if err != nil {
-		return schema.GetStates500JSONResponse{
-			Code:    &ErrDefaultCode,
-			Message: &ErrDefaultMessage,
-		}, nil
+		return schema.GetStates500JSONResponse(ErrDefault), nil
 	} else {
 		return schema.GetStates200JSONResponse(
 			utils.MapNotNull(states, func(state *domain.StateID) string {

@@ -113,6 +113,16 @@ WHERE
 	OR c.wca_name LIKE sqlc.arg(query)
 ;
 
+-- name: GetRankingSingleTotal :one
+SELECT
+    count(*)
+FROM
+    datalake.ranking_single
+WHERE
+    state_id = sqlc.arg(stateID)
+	AND event_id = sqlc.arg(eventID)
+;
+
 -- name: GetRankingSingle :many
 SELECT
 	rs.wca_id 			AS wca_id,
@@ -143,7 +153,19 @@ WHERE
     AND cpr.wca_name IS NOT NULL
 	AND rs.state_id = sqlc.arg(stateID)
 	AND rs.event_id = sqlc.arg(eventID)
+    AND rs.ranking > sqlc.arg(rankingCursor)
 ORDER BY rs.ranking ASC
+LIMIT 50
+;
+
+-- name: GetRankingAverageTotal :one
+SELECT
+    count(*)
+FROM
+    datalake.ranking_average
+WHERE
+    state_id = sqlc.arg(stateID)
+	AND event_id = sqlc.arg(eventID)
 ;
 
 -- name: GetRankingAverage :many
@@ -176,7 +198,9 @@ WHERE
     AND cpr.wca_name IS NOT NULL
 	AND ra.state_id = sqlc.arg(stateID)
 	AND ra.event_id = sqlc.arg(eventID)
+    AND ra.ranking > sqlc.arg(rankingCursor)
 ORDER BY ra.ranking ASC
+LIMIT 50
 ;
 
 -- name: GetStates :many

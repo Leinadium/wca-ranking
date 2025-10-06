@@ -14,10 +14,7 @@ func (s *ServerHandler) GetSearch(
 ) (schema.GetSearchResponseObject, error) {
 	search, err := s.searchService.Search(ctx, request.Params.S)
 	if err != nil {
-		return schema.GetSearch500JSONResponse{
-			Code:    &ErrDefaultCode,
-			Message: &ErrDefaultMessage,
-		}, nil
+		return schema.GetSearch500JSONResponse(ErrDefault), nil
 	} else {
 		return schema.GetSearch200JSONResponse(
 			utils.MapNotNull(search, func(s *domain.SearchResult) schema.SearchItem {

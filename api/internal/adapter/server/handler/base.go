@@ -3,10 +3,11 @@ package handler
 import "leinadium.dev/wca-ranking/internal/core/port"
 
 type ServerHandler struct {
-	stateService  port.StateService
-	syncService   port.SyncService
-	searchService port.SearchService
-	personService port.PersonService
+	stateService   port.StateService
+	syncService    port.SyncService
+	searchService  port.SearchService
+	personService  port.PersonService
+	rankingService port.RankingService
 }
 
 func NewServerHandler(
@@ -14,11 +15,13 @@ func NewServerHandler(
 	syncService port.SyncService,
 	searchService port.SearchService,
 	personService port.PersonService,
+	rankingService port.RankingService,
 ) *ServerHandler {
 	return &ServerHandler{
-		stateService:  stateService,
-		syncService:   syncService,
-		searchService: searchService,
-		personService: personService,
+		stateService:   stateService,
+		syncService:    syncService,
+		searchService:  searchService,
+		personService:  personService,
+		rankingService: rankingService,
 	}
 }

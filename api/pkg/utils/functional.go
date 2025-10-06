@@ -50,3 +50,11 @@ func Flatten[T, U any](in []T, f func(T) []U) []U {
 	}
 	return r
 }
+
+func Last[E any](s []E) (E, bool) {
+	if len(s) == 0 {
+		var zero E
+		return zero, false
+	}
+	return s[len(s)-1], true
+}

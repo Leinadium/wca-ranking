@@ -14,6 +14,10 @@ func SQLNullString(x sql.NullString) null.String {
 	return null.NewString(x.String, x.Valid)
 }
 
+func NullStringtoPointer(x null.String) *string {
+	return x.Ptr()
+}
+
 func NullIntToPointer(x null.Int) *int {
 	var res *int = nil
 	if x.Valid {

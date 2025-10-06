@@ -14,10 +14,7 @@ func (s *ServerHandler) GetPersonResultsPersonId(
 ) (schema.GetPersonResultsPersonIdResponseObject, error) {
 	persons, err := s.personService.Results(ctx, domain.WCAID(request.PersonId))
 	if err != nil {
-		return schema.GetPersonResultsPersonId500JSONResponse{
-			Code:    &ErrDefaultCode,
-			Message: &ErrDefaultMessage,
-		}, nil
+		return schema.GetPersonResultsPersonId500JSONResponse(ErrDefault), nil
 	} else {
 		return schema.GetPersonResultsPersonId200JSONResponse(
 			utils.MapNotNull(persons, func(r *domain.PersonResult) schema.PersonResult {
@@ -39,10 +36,7 @@ func (s *ServerHandler) GetPersonInfoPersonId(
 ) (schema.GetPersonInfoPersonIdResponseObject, error) {
 	person, err := s.personService.Person(ctx, domain.WCAID(request.PersonId))
 	if err != nil {
-		return schema.GetPersonInfoPersonId500JSONResponse{
-			Code:    &ErrDefaultCode,
-			Message: &ErrDefaultMessage,
-		}, nil
+		return schema.GetPersonInfoPersonId500JSONResponse(ErrDefault), nil
 	} else {
 		return schema.GetPersonInfoPersonId200JSONResponse{
 			Name:              &person.Name,
@@ -64,10 +58,7 @@ func (s *ServerHandler) GetPersonModePersonId(
 		domain.RankingMode(request.Mode),
 	)
 	if err != nil {
-		return schema.GetPersonModePersonId500JSONResponse{
-			Code:    &ErrDefaultCode,
-			Message: &ErrDefaultMessage,
-		}, nil
+		return schema.GetPersonModePersonId500JSONResponse(ErrDefault), nil
 	} else {
 		return schema.GetPersonModePersonId200JSONResponse(
 			utils.MapNotNull(res, func(r *domain.PersonRanking) schema.PersonRanking {

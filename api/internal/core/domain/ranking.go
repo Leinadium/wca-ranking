@@ -6,6 +6,7 @@ import (
 
 type RankingMode string
 type EventID string
+type RankingLowerBound int
 
 const (
 	RankingAverage RankingMode = "average"
