@@ -240,3 +240,14 @@ SELECT
 FROM
     datalake.export_date
 ;
+
+-- name: SetCurrentDate :exec
+UPDATE datalake.export_date
+SET last_update = sqlc.arg(newDate)
+;
+
+-- name: RunUpdate :exec
+CALL app.update_after_insert();
+
+-- name: RunRefresh :exec
+CALL app.refresh();

@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"leinadium.dev/wca-ranking/internal/adapter/config"
-	"leinadium.dev/wca-ranking/internal/adapter/wca/models"
+	"leinadium.dev/wca-ranking/internal/adapter/request"
 	"leinadium.dev/wca-ranking/internal/core/domain"
 )
 
@@ -15,21 +15,19 @@ const (
 
 func NewWCAAPIRequester(config *config.WCA) *WCAAPIRequester {
 	return &WCAAPIRequester{
-		requester:          NewRequester(),
-		endpointMe:         config.Endpoints.Me,
-		endpointLatestData: config.Endpoints.LatestData,
+		requester: request.NewRequester(),
+		config:    config,
 	}
 }
 
 type WCAAPIRequester struct {
-	requester          *Requester
-	endpointMe         string
-	endpointLatestData string
+	requester *request.Requester
+	config    *config.WCA
 }
 
 func (r *WCAAPIRequester) LatestData(ctx context.Context) (*domain.WCALatestData, error) {
-	var payload models.WCALatestData
-	if err := r.requester.GetJSON(r.endpointLatestData, &payload); err != nil {
+	var payload latestData
+	if err := r.requester.GetJSON(r.config.Endpoints.LatestData, &payload); err != nil {
 		return nil, err
 	}
 
@@ -49,14 +47,8 @@ func (r *WCAAPIRequester) DownloadLatestData(ctx context.Context, data *domain.W
 	return domain.RawFile(body), nil
 }
 
-func (r *WCAAPIRequester) UserInfo(ctx context.Context, accessToken string) (*domain.UserBasic, error) {
-	var payload models.WCAUserInfo
-	if err := r.requester.GetJSONAuthenticated(r.endpointMe, accessToken, &payload); err != nil {
-		return nil, err
-	}
-	return &domain.UserBasic{
-		WCAID:   payload.Me.WCAID,
-		Name:    payload.Me.Name,
-		Country: payload.Me.Country,
-	}, nil
+type latestData struct {
+	ExportDate string `json:"export_date"`
+	SqlUrl     string `json:"sql_url"`
+	TsvUrl     string `json:"tsv_url"`
 }

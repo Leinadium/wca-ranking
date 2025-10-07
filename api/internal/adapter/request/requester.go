@@ -1,4 +1,4 @@
-package wca
+package request
 
 import (
 	"encoding/json"
@@ -19,7 +19,7 @@ func NewRequester() *Requester {
 
 func (r *Requester) into(body io.ReadCloser, into any) error {
 	defer body.Close()
-	return json.NewDecoder(body).Decode(&into)
+	return json.NewDecoder(body).Decode(into)
 }
 
 func (r *Requester) request(method, url, access string) (io.ReadCloser, error) {

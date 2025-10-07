@@ -12,9 +12,6 @@ type WCAAPIRequester interface {
 
 	// DownloadLatestData downloads the latest data into a file
 	DownloadLatestData(ctx context.Context, data *domain.WCALatestData) (domain.RawFile, error)
-
-	// UserInfo obtains the current basic information from WCA's API
-	UserInfo(ctx context.Context, accessToken string) (*domain.UserBasic, error)
 }
 
 type WCAAPIService interface {
@@ -23,7 +20,4 @@ type WCAAPIService interface {
 
 	// DownloadLatestData downloads the latest available data into a file
 	DownloadLatestData(ctx context.Context, data *domain.WCALatestData) (domain.File, error)
-
-	// UserInfo obtains the current basic information from WCA's API
-	UserInfo(ctx context.Context, accessToken string) (*domain.UserBasic, error)
 }
