@@ -2,7 +2,7 @@
 
 A regional ranking for World Cube Association official results. Hosted at [ranking.leinadium.dev](ranking.leinadium.dev)
 
-This project is a rewrite of my preivous project [ranking-wca](github.com/Leinadium/ranking-wca)
+This project is a rewrite of my previous project [ranking-wca](github.com/Leinadium/ranking-wca)
 
 ## Structure
 
