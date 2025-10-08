@@ -225,6 +225,96 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+  /auth/endpoint:
+    get:
+      tags:
+        - Auth
+      summary: Get OAuth endpoint
+      description: Get OAuth endpoint for WCA Authentication
+      responses:
+        "200":
+          description: "Information retrieved successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Endpoint"
+        "500":
+          description: "Unexpected error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /auth/callback:
+    get:
+      tags:
+        - Auth
+      summary: Callback after OAuth
+      description: Get the access token after a successfully authentication with WCA OAuth
+      parameters:
+        - in: query
+          name: code
+          description: OAuth code bearer
+          required: true
+          example: "xxxx..."
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Information retrieved successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Callback"
+        "500":
+          description: "Unexpected error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /person/{personId}:
+    post:
+      tags:
+        - Person
+      summary: Register an person information after authentication
+      description: Using the access token, updates person state
+      security:
+        - apiToken: []
+      parameters:
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+            pattern: '^Bearer [-A-Za-z0-9+/]+$'
+          required: true
+        - in: path
+          required: true
+          name: personId
+          description: Person WCA's ID
+          example: "2018GUIM02"
+          schema:
+            $ref: "#/components/schemas/WCAID"
+      requestBody:
+        description: Optional description in *Markdown*
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
+      responses:
+        "200":
+          description: "Successful update"
+        "400":
+          description: "Invalid parameters"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Unexpected error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
 components:
   schemas:
@@ -450,7 +540,6 @@ components:
             nullable: true
           minItems: 5
           maxItems: 5
-        
     Ranking:
       type: object
       properties:
@@ -464,17 +553,35 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/RankingEntry"
+    Endpoint:
+      type: object
+      properties:
+        url:
+          type: string
+          description: "OAuth endpoint"
+          example: "https://wwww.worldcubeassociation.org/auth"
+    Callback:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          description: "WCA OAuth access token"
+          example: "xxxxx..xxxxx"
+        expiresAt:
+          type: string
+          format: date
+          description: "Expire at"
+          example: "2025-10-07T00:00:00Z"
+    RegisterRequest:
+      type: object
+      properties:
+        stateId:
+          type: string
+          description: "State ID"
+          example: "PR"
 
   securitySchemes:
-    api_auth:
-      type: oauth2
-      flows:
-        clientCredentials:
-          tokenUrl: https://ranking.leinadium.dev/v1/
-          scopes:
-            read:person: read persons
-    api_token:
-      type: apiKey
-      name: Authorization
-      description: "Access token as 'Bearer {token}'"
+    apiToken:
+      type: http
+      scheme: bearer
       in: header

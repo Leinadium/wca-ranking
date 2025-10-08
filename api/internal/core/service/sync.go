@@ -17,21 +17,21 @@ type SyncService struct {
 }
 
 func (s *SyncService) ImportFile(file domain.File) error {
-	return nil
+	return s.r.ImportFile(file)
 }
 
-func (s *SyncService) Update() error {
-	return nil
+func (s *SyncService) Update(ctx context.Context) error {
+	return s.r.Update(ctx)
 }
 
-func (s *SyncService) Refresh() error {
-	return nil
+func (s *SyncService) Refresh(ctx context.Context) error {
+	return s.r.Refresh(ctx)
 }
 
 func (s *SyncService) CurrentDate(ctx context.Context) (*time.Time, error) {
 	return s.r.CurrentDate(ctx)
 }
 
-func (s *SyncService) SetCurrentDate(time.Time) error {
-	return nil
+func (s *SyncService) SetCurrentDate(ctx context.Context, t time.Time) error {
+	return s.r.SetCurrentDate(ctx, t)
 }

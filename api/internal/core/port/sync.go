@@ -9,6 +9,10 @@ import (
 
 type SyncRepository interface {
 	CurrentDate(context.Context) (*time.Time, error)
+	ImportFile(domain.File) error
+	Update(context.Context) error
+	Refresh(context.Context) error
+	SetCurrentDate(context.Context, time.Time) error
 }
 
 type SyncService interface {
@@ -16,14 +20,14 @@ type SyncService interface {
 	ImportFile(file domain.File) error
 
 	// Update updates app and datalake tables from the sql dump
-	Update() error
+	Update(context.Context) error
 
 	// Refresh updates the rankings without recreating most of the tables
-	Refresh() error
+	Refresh(context.Context) error
 
 	// CurrentDate gets the current dump date stored in the database
 	CurrentDate(context.Context) (*time.Time, error)
 
 	// SetCurrentDate updates the current dump date
-	SetCurrentDate(time.Time) error
+	SetCurrentDate(context.Context, time.Time) error
 }

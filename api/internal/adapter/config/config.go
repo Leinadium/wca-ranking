@@ -8,10 +8,11 @@ import (
 
 type (
 	Config struct {
-		Server Server `toml:"server"`
-		DB     DB     `toml:"db"`
-		WCA    WCA    `toml:"wca"`
-		Auth   Auth   `toml:"auth"`
+		Server  Server  `toml:"server"`
+		DB      DB      `toml:"db"`
+		WCA     WCA     `toml:"wca"`
+		Auth    Auth    `toml:"auth"`
+		Updater Updater `toml:"updater"`
 	}
 
 	Server struct {
@@ -45,6 +46,9 @@ type (
 	}
 	Auth struct {
 		RegisterTimeout float32 `toml:"register_timeout"`
+	}
+	Updater struct {
+		IntervalMinutes int `toml:"interval_minutes"`
 	}
 
 	ConfigFile string

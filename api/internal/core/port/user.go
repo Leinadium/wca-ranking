@@ -6,6 +6,11 @@ import (
 	"leinadium.dev/wca-ranking/internal/core/domain"
 )
 
+type UserRequester interface {
+	// UserInfo obtains the current basic information from WCA's API
+	UserInfo(ctx context.Context, accessToken string) (*domain.UserBasic, error)
+}
+
 type UserRepository interface {
 	// User gets the registered user in the database
 	User(ctx context.Context, id domain.WCAID) (*domain.User, error)
@@ -15,9 +20,15 @@ type UserRepository interface {
 }
 
 type UserService interface {
+	// UserInfo obtains the current basic information from WCA's API
+	ExternalUser(ctx context.Context, accessToken string) (*domain.UserBasic, error)
+
 	// User gets the registered user in the database
 	User(ctx context.Context, id domain.WCAID) (*domain.User, error)
 
+	// IsUpdatable returns the amount of hours the user needs to wait until able to update again
+	HoursUntilAbleUpdate(ctx context.Context, id domain.WCAID) (int, error)
+
 	// SetUser updates or creates the user in the database
-	SetUser(ctx context.Context, user *domain.User) error
+	SetUser(ctx context.Context, id domain.WCAID, state string) error
 }

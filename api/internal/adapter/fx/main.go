@@ -9,6 +9,7 @@ func Main() {
 		WCAModule,
 		ServicesModule,
 		ServerModule,
+		UpdateModule,
 	)
 
 	app.Run()

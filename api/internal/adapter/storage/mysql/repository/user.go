@@ -22,7 +22,7 @@ func (r *UserRepository) User(ctx context.Context, id domain.WCAID) (*domain.Use
 		return nil, err
 	}
 	return &domain.User{
-		WCAID:        row.WcaID,
+		WCAID:        domain.WCAID(row.WcaID),
 		StateID:      row.StateID,
 		RegisterDate: row.RegisterDate,
 	}, nil
@@ -33,7 +33,7 @@ func (r *UserRepository) SetUser(ctx context.Context, user *domain.User) error {
 		return errors.New("user is nil")
 	}
 	return r.query.SetUser(ctx, schema.SetUserParams{
-		Wcaid:        user.WCAID,
+		Wcaid:        string(user.WCAID),
 		Stateid:      user.StateID,
 		Registerdate: user.RegisterDate,
 	})
