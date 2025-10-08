@@ -26,6 +26,9 @@ type UserService interface {
 	// User gets the registered user in the database
 	User(ctx context.Context, id domain.WCAID) (*domain.User, error)
 
+	// IsUpdatable returns the amount of hours the user needs to wait until able to update again
+	HoursUntilAbleUpdate(ctx context.Context, id domain.WCAID) (int, error)
+
 	// SetUser updates or creates the user in the database
-	SetUser(ctx context.Context, user *domain.User) error
+	SetUser(ctx context.Context, id domain.WCAID, state string) error
 }

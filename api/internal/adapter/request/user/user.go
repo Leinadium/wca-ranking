@@ -26,7 +26,7 @@ func (r *UserRequester) UserInfo(ctx context.Context, accessToken string) (*doma
 		return nil, err
 	}
 	return &domain.UserBasic{
-		WCAID:   payload.Me.WCAID,
+		WCAID:   domain.WCAID(payload.Me.WCAID),
 		Name:    payload.Me.Name,
 		Country: payload.Me.Country,
 	}, nil
