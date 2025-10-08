@@ -8,6 +8,7 @@ type ServerHandler struct {
 	searchService  port.SearchService
 	personService  port.PersonService
 	rankingService port.RankingService
+	authService    port.AuthService
 }
 
 func NewServerHandler(
@@ -16,6 +17,7 @@ func NewServerHandler(
 	searchService port.SearchService,
 	personService port.PersonService,
 	rankingService port.RankingService,
+	authService port.AuthService,
 ) *ServerHandler {
 	return &ServerHandler{
 		stateService:   stateService,
@@ -23,5 +25,6 @@ func NewServerHandler(
 		searchService:  searchService,
 		personService:  personService,
 		rankingService: rankingService,
+		authService:    authService,
 	}
 }

@@ -225,6 +225,25 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+  /auth/endpoint:
+    get:
+      tags:
+        - Auth
+      summary: Get OAuth endpoint
+      description: Get OAuth endpoint for WCA Authentication
+      responses:
+        "200":
+          description: "Information retrieved successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Endpoint"
+        "500":
+          description: "Unexpected error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
 components:
   schemas:
@@ -464,6 +483,14 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/RankingEntry"
+    Endpoint:
+      type: object
+      properties:
+        url:
+          type: string
+          description: "OAuth endpoint"
+          example: "https://wwww.worldcubeassociation.org/auth"
+
 
   securitySchemes:
     api_auth:
