@@ -2,7 +2,7 @@ package domain
 
 import "time"
 
-type WCALatestData struct {
+type RemoteLatestData struct {
 	Timestamp   time.Time
 	DownloadUrl string
 }

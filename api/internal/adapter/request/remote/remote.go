@@ -1,4 +1,4 @@
-package wca
+package remote
 
 import (
 	"context"
@@ -13,19 +13,19 @@ const (
 	dateFormat = "2006-01-02T15:04:05Z"
 )
 
-func NewWCAAPIRequester(config *config.WCA) *WCAAPIRequester {
-	return &WCAAPIRequester{
+func NewRemoteRequester(config *config.WCA) *RemoteRequester {
+	return &RemoteRequester{
 		requester: request.NewRequester(),
 		config:    config,
 	}
 }
 
-type WCAAPIRequester struct {
+type RemoteRequester struct {
 	requester *request.Requester
 	config    *config.WCA
 }
 
-func (r *WCAAPIRequester) LatestData(ctx context.Context) (*domain.WCALatestData, error) {
+func (r *RemoteRequester) LatestData(ctx context.Context) (*domain.RemoteLatestData, error) {
 	var payload latestData
 	if err := r.requester.GetJSON(r.config.Endpoints.LatestData, &payload); err != nil {
 		return nil, err
@@ -36,10 +36,10 @@ func (r *WCAAPIRequester) LatestData(ctx context.Context) (*domain.WCALatestData
 		return nil, err
 	}
 
-	return &domain.WCALatestData{Timestamp: res, DownloadUrl: payload.SqlUrl}, nil
+	return &domain.RemoteLatestData{Timestamp: res, DownloadUrl: payload.SqlUrl}, nil
 }
 
-func (r *WCAAPIRequester) DownloadLatestData(ctx context.Context, data *domain.WCALatestData) (domain.RawFile, error) {
+func (r *RemoteRequester) DownloadLatestData(ctx context.Context, data *domain.RemoteLatestData) (domain.RawFile, error) {
 	body, err := r.requester.Get(data.DownloadUrl)
 	if err != nil {
 		return nil, err

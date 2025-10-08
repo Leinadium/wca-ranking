@@ -51,6 +51,8 @@ func NewFileService() *FileService {
 }
 
 func (f *FileService) FromRaw(reader domain.RawFile) (domain.File, error) {
+	defer reader.Close()
+
 	file, err := createFile()
 	if err != nil {
 		return nil, err
