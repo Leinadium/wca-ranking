@@ -14,8 +14,11 @@ type AuthService struct {
 	config    *config.WCA
 }
 
-func NewAuthService(p port.AuthRequester) *AuthService {
-	return &AuthService{requester: p}
+func NewAuthService(
+	requester port.AuthRequester,
+	config *config.WCA,
+) *AuthService {
+	return &AuthService{requester: requester, config: config}
 }
 
 func (s *AuthService) AuthEndpoint() (string, error) {

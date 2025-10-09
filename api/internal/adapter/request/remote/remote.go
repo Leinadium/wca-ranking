@@ -27,7 +27,7 @@ type RemoteRequester struct {
 
 func (r *RemoteRequester) LatestData(ctx context.Context) (*domain.RemoteLatestData, error) {
 	var payload latestData
-	if err := r.requester.GetJSON(r.config.Endpoints.LatestData, &payload); err != nil {
+	if err := r.requester.GetJSON(r.config.ExportURL, &payload); err != nil {
 		return nil, err
 	}
 

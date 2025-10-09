@@ -16,8 +16,8 @@ type Updater struct {
 	file   port.FileService
 	config *config.Updater
 
-	timer *time.Ticker
-	stop  chan struct{}
+	ticker *time.Ticker
+	stop   chan struct{}
 }
 
 func NewUpdater(
@@ -32,8 +32,8 @@ func NewUpdater(
 		file:   file,
 		config: config,
 
-		timer: nil,
-		stop:  make(chan struct{}),
+		ticker: nil,
+		stop:   make(chan struct{}),
 	}
 }
 
@@ -43,7 +43,7 @@ func (u *Updater) Start(ctx context.Context) error {
 		localCtx    context.Context
 	)
 
-	u.timer = time.NewTicker(time.Duration(u.config.IntervalMinutes) * time.Minute)
+	u.ticker = time.NewTicker(time.Duration(u.config.IntervalMinutes) * time.Minute)
 
 	cancel := func() {
 		if localCancel != nil {
@@ -51,21 +51,17 @@ func (u *Updater) Start(ctx context.Context) error {
 		}
 	}
 	run := func() {
-		localCtx, localCancel = context.WithCancel(ctx)
-		go u.run(localCtx)
+		localCtx, localCancel = context.WithTimeout(context.Background(), time.Duration(5)*time.Minute)
+		go u.runCatching(localCtx)
 	}
 
 	go func() {
 		run() // first time
 		for {
 			select {
-			case <-u.timer.C:
+			case <-u.ticker.C:
 				cancel()
 				run()
-			case <-ctx.Done():
-				cancel()
-				return
-
 			case <-u.stop:
 				cancel()
 				return
@@ -80,6 +76,12 @@ func (u *Updater) Stop(_ context.Context) error {
 		u.stop <- struct{}{}
 	}
 	return nil
+}
+
+func (u *Updater) runCatching(ctx context.Context) {
+	if err := u.run(ctx); err != nil {
+		log.Printf("could not run updater: %v\n", err)
+	}
 }
 
 func (u *Updater) run(ctx context.Context) error {
@@ -124,8 +126,8 @@ func (u *Updater) run(ctx context.Context) error {
 		return err
 	}
 
-	log.Println("import sql file")
-	if err := u.sync.ImportFile(file); err != nil {
+	log.Println("importing sql file")
+	if err := u.sync.ImportFile(u.config.MariaDBBin, file); err != nil {
 		return err
 	}
 
@@ -135,5 +137,15 @@ func (u *Updater) run(ctx context.Context) error {
 	}
 
 	log.Println("refreshing database")
-	return u.sync.Refresh(ctx)
+	if err := u.sync.Refresh(ctx); err != nil {
+		return err
+	}
+
+	log.Printf("updating timestamp")
+	if err := u.sync.SetCurrentDate(ctx, remote.Timestamp); err != nil {
+		return err
+	}
+
+	log.Println("updater done")
+	return nil
 }

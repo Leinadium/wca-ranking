@@ -9,7 +9,7 @@ import (
 
 type SyncRepository interface {
 	CurrentDate(context.Context) (*time.Time, error)
-	ImportFile(domain.File) error
+	ImportFile(string, domain.File) error
 	Update(context.Context) error
 	Refresh(context.Context) error
 	SetCurrentDate(context.Context, time.Time) error
@@ -17,7 +17,7 @@ type SyncRepository interface {
 
 type SyncService interface {
 	// ImportFile imports a sql file to the storage
-	ImportFile(file domain.File) error
+	ImportFile(bin string, file domain.File) error
 
 	// Update updates app and datalake tables from the sql dump
 	Update(context.Context) error

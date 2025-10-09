@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"os"
 	"os/exec"
 	"strconv"
@@ -32,9 +33,9 @@ type SyncRepository struct {
 	db     *mysql.DB
 }
 
-func (s *SyncRepository) ImportFile(file domain.File) error {
+func (s *SyncRepository) ImportFile(bin string, file domain.File) error {
 	cmd := exec.Command(
-		"/usr/bin/mariadb",
+		bin,
 		"--host", s.config.Host,
 		"--port", strconv.Itoa(s.config.Port),
 		"--user", s.config.User,
@@ -68,6 +69,9 @@ func (s *SyncRepository) Refresh(ctx context.Context) error {
 func (s *SyncRepository) CurrentDate(ctx context.Context) (*time.Time, error) {
 	row, err := s.query.GetCurrentDate(ctx)
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return &time.Time{}, nil
+		}
 		return nil, err
 	}
 	if !row.Valid {
