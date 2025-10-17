@@ -99,6 +99,9 @@ func (u *Updater) run(ctx context.Context) error {
 		return err
 	}
 
+	log.Printf("local timestamp: %v\n", local)
+	log.Printf("remote timestamp: %v\n", remote.Timestamp)
+
 	if local.Equal(remote.Timestamp) {
 		log.Println("no updates. finished updater")
 		return nil

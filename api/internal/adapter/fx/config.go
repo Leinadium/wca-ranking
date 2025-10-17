@@ -12,6 +12,5 @@ var ConfigModule = fx.Module("config",
 	fx.Provide(func(c *config.Config) *config.WCA { return &c.WCA }),
 	fx.Provide(func(c *config.Config) *config.Auth { return &c.Auth }),
 	fx.Provide(func(c *config.Config) *config.Updater { return &c.Updater }),
-
-	fx.Provide(func() config.ConfigFile { return "./config.toml" }),
+	fx.Supply(config.ConfigFile("./config.toml")),
 )

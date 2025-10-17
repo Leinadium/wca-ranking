@@ -82,5 +82,15 @@ func (s *SyncRepository) CurrentDate(ctx context.Context) (*time.Time, error) {
 }
 
 func (s *SyncRepository) SetCurrentDate(ctx context.Context, t time.Time) error {
-	return s.query.SetCurrentDate(ctx, sql.NullTime{Time: t, Valid: true})
+	tx, err := s.db.DB.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	qtx := s.query.WithTx(tx)
+
+	if err := qtx.ClearCurrentDate(ctx); err != nil {
+		return err
+	}
+	return qtx.SetCurrentDate(ctx, sql.NullTime{Time: t, Valid: true})
 }
