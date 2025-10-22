@@ -8,7 +8,7 @@
 <!-- Header -->
 <header>
     <div class="header-title">
-      <span id="title">Ranking Estadual</span>
+        <span id="title">Ranking Estadual</span>
     </div>
 </header>
 
@@ -21,10 +21,9 @@
 
 <footer>
     <div class="footer-description">
-      <span id="footer">Daniel Guimarães @ 2025</span>
+    <span id="footer">Daniel Guimarães @ 2025</span>
     </div>
 </footer>
-
 
 <style>
     header {
@@ -35,6 +34,10 @@
       flex-flow: column;
       justify-content: center;
       align-items: center;
+
+      position: absolute;
+      top: 0;
+      left: 0;
     }
 
     #title {
@@ -43,5 +46,24 @@
       font-weight: 700;
       padding: .5em .9em;
       border-radius: 1em;
+    }
+
+    footer {
+        /* background-color: #0F828C; */
+        font-size: 1em;
+        font-weight: 200;
+        padding: .2em .5em;
+        border-radius: em;
+
+        min-width: 100vw;
+
+        display: flex;
+        flex-flow: column;
+        justify-content: center;
+        align-items: center;
+
+        position: absolute;
+        bottom: 0;
+        left: 0;
     }
 </style>
