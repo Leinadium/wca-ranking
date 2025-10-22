@@ -16,8 +16,8 @@ type SyncService struct {
 	r port.SyncRepository
 }
 
-func (s *SyncService) ImportFile(file domain.File) error {
-	return s.r.ImportFile(file)
+func (s *SyncService) ImportFile(bin string, file domain.File) error {
+	return s.r.ImportFile(bin, file)
 }
 
 func (s *SyncService) Update(ctx context.Context) error {

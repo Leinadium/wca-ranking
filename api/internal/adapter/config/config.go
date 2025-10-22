@@ -26,8 +26,7 @@ type (
 		User     string `toml:"user"`
 		Password string `toml:"password"`
 		Tables   struct {
-			Default string `toml:"default"`
-			Dump    string `toml:"dump"`
+			Dump string `toml:"dump"`
 		}
 	}
 	WCA struct {
@@ -37,7 +36,6 @@ type (
 
 		Endpoints struct {
 			Me             string `toml:"me"`
-			LatestData     string `toml:"latest_data"`
 			OAuthAuthorize string `toml:"ouath_authorize"`
 			OAuthToken     string `toml:"oauth_token"`
 		} `toml:"endpoints"`
@@ -48,7 +46,8 @@ type (
 		RegisterTimeout float32 `toml:"register_timeout"`
 	}
 	Updater struct {
-		IntervalMinutes int `toml:"interval_minutes"`
+		MariaDBBin      string `toml:"mariadb_bin"`
+		IntervalMinutes int    `toml:"interval_minutes"`
 	}
 
 	ConfigFile string

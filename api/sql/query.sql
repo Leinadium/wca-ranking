@@ -241,10 +241,11 @@ FROM
     datalake.export_date
 ;
 
+-- name: ClearCurrentDate :exec
+TRUNCATE TABLE datalake.export_date;
+
 -- name: SetCurrentDate :exec
-UPDATE datalake.export_date
-SET last_update = sqlc.arg(newDate)
-;
+INSERT INTO datalake.export_date(last_update) VALUES (sqlc.arg(newDate));
 
 -- name: RunUpdate :exec
 CALL app.update_after_insert();
