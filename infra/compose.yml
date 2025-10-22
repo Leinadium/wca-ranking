@@ -1,0 +1,19 @@
+services:
+  db:
+    build:
+      context: ../db/
+      dockerfile: ../db/Dockerfile
+    env_file: ../db/.env
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    volumes:
+      - db-data:/var/lib/mysql
+    restart: unless-stopped
+
+volumes:
+  db-data:

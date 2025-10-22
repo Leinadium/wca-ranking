@@ -1,0 +1,29 @@
+[server]
+host = "https://ranking.leinadium.dev"
+port = 8080
+
+[db]
+host = "db"
+port = 3306
+user = "some-user"
+password = "some-password"
+[db.tables]
+dump = "dump"
+
+[wca]
+export_url = "https://www.worldcubeassociation.org/api/v0/export/public"
+client_id = "xxxxxxxxxxxxxxxxxx"
+client_secret = "yyyyyyyyyyyyyyyyyyy"
+redirect_uri = "http://api:8080/api/auth/callback"
+
+[wca.endpoints]
+me = "https://www.worldcubeassociation.org/api/v0/me"
+oauth_authorize = "https://www.worldcubeassociation.org/oauth/authorize"
+oauth_token = "https://www.worldcubeassociation.org/oauth/token"
+
+[auth]
+register_timeout = 60
+
+[updater]
+mariadb_bin = "/usr/bin/mariadb"
+interval_minutes = 60

@@ -32,7 +32,7 @@ func (r *AuthRequester) AccessToken(ctx context.Context, code string) (*domain.A
 
 	var res oAuthResponse
 	err := r.requester.PostJSON(
-		r.config.Endpoints.OAuthAuthorize,
+		r.config.Endpoints.OAuthToken,
 		values,
 		&res,
 	)
